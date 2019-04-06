@@ -1,0 +1,35 @@
+<%- include("../includes/head.ejs") %>
+</head>
+
+<%- include('../includes/nav.ejs') %>
+<main>
+ <h1>Orders</h1>
+ <% if(orders.length === 0) {%>
+  <p>Empty order</p>
+<%}else {%>
+  <p>Orders [<%=orders.length %>]</p>
+  <% orders.forEach( order => {%> 
+      <section>
+        <h1>Order# <%= order.id %></h1>
+       
+       <ul>
+        <%order.products.forEach(prod => {%>
+          <ii>
+            <h2>Title:<%= prod.title %></h2>
+            <p>
+              Description:<%= prod.description %>
+            </p>
+            <p>
+              Unit Price: <%= prod.price %>
+            </p>
+            <p>
+              Qty: <%= prod.orderItem.qunatity %>
+            </p>
+          </ii>
+          <%})%>
+       </ul>
+      </section>
+    <%})%>
+  <%}%>
+</main>
+<%- include('../includes/end.ejs') %>

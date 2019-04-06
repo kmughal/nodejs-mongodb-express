@@ -1,0 +1,22 @@
+{
+  "name": "express-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon ."
+  },
+  "keywords": [],
+  "author": "Khurram Shahzad",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "1.18.3",
+    "ejs": "^2.6.1",
+    "express": "4.16.4",
+    "express-handlebars": "^3.0.2",
+    "mysql2": "^1.6.5",
+    "nodemon": "^1.18.10",
+    "pug": "^2.0.3",
+    "sequelize": "^5.2.11"
+  }
+}

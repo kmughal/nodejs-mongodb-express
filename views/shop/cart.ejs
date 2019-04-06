@@ -1,0 +1,34 @@
+<%- include("../includes/head.ejs") %>
+</head>
+
+<%- include('../includes/nav.ejs') %>
+<main>
+  <h1>cart</h1>
+  <% if (cart.products && cart.products.length > 0) {%>
+  <ol>
+    <%for(let product of cart.products) {%>
+    <li class="main-header__item-list shadow">
+      <h2> <%=product.title%></h2>
+      <p>
+        Qunantity : <%=product.cartItem.qunatity%>
+      </p>
+      <section>
+        <form action="/shop/remove-product-cart" method="POST">
+          <input type="hidden" name="id" id="id" value="<%=product.id%>">
+          <button>
+            Delete Item
+          </button>
+        </form>
+      </section>
+    </li>
+
+    <%}%>
+    </ol>
+    <form action="/shop/create-order" method="POST">
+      <button>Submit order</button>
+    </form>
+<%} else {%>
+    <p>No product!</p>
+    <%}%>
+</main>
+<%- include('../includes/end.ejs') %>

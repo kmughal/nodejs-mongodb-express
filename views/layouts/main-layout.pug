@@ -1,0 +1,18 @@
+doctype
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    title #{title}
+    link(rel="stylesheet", href="/css/main.css", attr)
+  body
+    header.main-header
+      nav.main-header__nav
+        ul.main-header__item-list
+          li.main-header__item(class=(path && path === "add-product" ? "active" : ""))
+            a(href="/admin/add-product") Add Product
+          li.main-header__item(class=(path && path === "shop" ? "active" : ""))
+            a(href="/shop") Shop
+    p.visited Visited: 
+      time(datetime=(new Date().toLocaleString())) #{new Date().toLocaleString()}
+    .clearfix
+    block content

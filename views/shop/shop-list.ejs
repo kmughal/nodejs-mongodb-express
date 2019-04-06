@@ -1,0 +1,40 @@
+<%- include("../includes/head.ejs") %>
+</head>
+
+<%- include('../includes/nav.ejs') %>
+<main>
+  <h1>Shop page</h1>
+  <%if(products.length === 0 ) {%>
+  <p>No product found</p>
+  <%} else {%>
+  <div class="grid">
+    <%for(const product of products) {%>
+    <article class="product-item">
+      <header class="card__header">
+        <h1 class="product__title">
+          <%= product.title%>
+        </h1>
+      </header>
+      <picture class="card__image">
+        <img src="<%=product.imageUrl %>" alt="<%= product.title%>">
+      </picture>
+      <p class="product_price">
+        <h2>
+          £ <%= product.price%>
+        </h2>
+      </p>
+      <p class="product__description">
+        <%= product.description%>
+      </p>
+      <section class="card__actions">
+        <form class="card__actions-item" action="/shop/product/<%=product.id%>" method="get">
+          <button>Detail</button>
+        </form>
+        <%- include('../includes/add-t-cart.ejs',{product : product}) %>
+      </section>
+    </article>
+    <%}%>
+      </div>
+    <%}%>
+</main>
+<%- include('../includes/end.ejs') %>
