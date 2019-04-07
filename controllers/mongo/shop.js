@@ -1,5 +1,4 @@
-
-const {Product} = require("../../models/mongodb/product");
+const { Product } = require("../../models/mongodb/product");
 
 const mongodbShopController = {
 	getIndex(req, res, next) {
@@ -9,12 +8,12 @@ const mongodbShopController = {
 				path: "index"
 			});
 		} catch (e) {
-			throw new Error("Failed:Index , Error :", e)
+			throw new Error("Failed:Index , Error :", e);
 		}
 	},
 	async getProducts(req, res, next) {
 		const products = await Product.getAll();
-		products.map(p => p.id = p._id);
+		products.map(p => (p.id = p._id));
 		try {
 			res.render("shop/shop-list", {
 				title: "Products",
@@ -22,9 +21,8 @@ const mongodbShopController = {
 				products
 			});
 		} catch (e) {
-			throw new Error("Failed:Shop.Product , Error :", e)
+			throw new Error("Failed:Shop.Product , Error :", e);
 		}
-
 	},
 	async getProductById(req, res, next) {
 		const product = await Product.getById(req.params.id);
@@ -35,27 +33,24 @@ const mongodbShopController = {
 				product
 			});
 		} catch (e) {
-			throw new Error("Failed:Shop.Product , Error :", e)
+			throw new Error("Failed:Shop.Product , Error :", e);
 		}
-
 	},
-	async getCart(req, res, next) {
-
+	getCart(req, res, next) {
 		try {
-			const cart = req.user.cart;
+			const cart = req.user.getCart();
+			console.log(cart);
 			res.render("shop/cart", {
 				title: "Product item added successfully!",
 				path: "cart",
 				cart
 			});
 		} catch (e) {
-			throw new Error("Failed:Cart , Error :", e)
+			throw new Error("Failed:Cart , Error :", e);
 		}
 	},
 	async addCart(req, res, next) {
-		const {
-			id
-		} = req.body;
+		const { id } = req.body;
 
 		try {
 			const product = await Product.getById(id);
@@ -65,7 +60,7 @@ const mongodbShopController = {
 				path: "cart"
 			});
 		} catch (e) {
-			throw new Error("Failed:Cart , Error :", e)
+			throw new Error("Failed:Cart , Error :", e);
 		}
 	},
 	getOrders(req, res, next) {
@@ -75,7 +70,7 @@ const mongodbShopController = {
 				path: "orders"
 			});
 		} catch (e) {
-			throw new Error("Failed:Orders , Error :", e)
+			throw new Error("Failed:Orders , Error :", e);
 		}
 	},
 	getCheckout(req, res, next) {
@@ -85,7 +80,7 @@ const mongodbShopController = {
 				path: "cart"
 			});
 		} catch (e) {
-			throw new Error("Failed:Checkout , Error :", e)
+			throw new Error("Failed:Checkout , Error :", e);
 		}
 	},
 	async createInitialViewModel(req, res, next) {
@@ -100,23 +95,23 @@ const mongodbShopController = {
 				activeAddProduct: false
 			});
 		} catch (e) {
-			throw new Error("Fail to get products.")
+			throw new Error("Fail to get products.");
 		}
 	},
 	async removePrdouctFromCart(req, res, next) {
 		try {
-			const {
-				id
-			} = req.body;
-			const result = null;
+			const { id } = req.body;
+		
+			
+			const result = await req.user.removeProductFromCart(req.user.id, id);
+			console.log(result)
 			if (result) {
 				return res.redirect("/shop/cart");
 			}
-
+		
 		} catch (e) {
 			throw new Error("Shp.removeProductFromCart failed, Error:", e);
 		}
-
 	}
 };
 

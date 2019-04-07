@@ -38,13 +38,13 @@ router.get("/", mongodbShopController.createInitialViewModel);
 
 router.get("/index");
 
-router.get("/product",mongodbShopController.getProducts);
+router.get("/product", mongodbShopController.getProducts);
 
-router.get("/product/:id",mongodbShopController.getProductById);
+router.get("/product/:id", mongodbShopController.getProductById);
 
-router.get("/cart");
+router.get("/cart", mongodbShopController.getCart);
 
-router.post("/cart",mongodbShopController.addCart);
+router.post("/cart", mongodbShopController.addCart);
 
 router.get("/checkout");
 
@@ -52,6 +52,9 @@ router.post("/create-order");
 
 router.get("/orders");
 
-router.post("/remove-product-cart");
+router.post(
+	"/remove-product-cart",
+	mongodbShopController.removePrdouctFromCart
+);
 
 module.exports = router;

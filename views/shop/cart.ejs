@@ -4,14 +4,15 @@
 <%- include('../includes/nav.ejs') %>
 <main>
   <h1>cart</h1>
-  <% if (cart.products && cart.products.length > 0) {%>
+  <% if (cart.items && cart.items.length > 0) {%>
   <ol>
-    <%for(let product of cart.products) {%>
+    <%for(let product of cart.items) {%>
     <li class="main-header__item-list shadow">
       <h2> <%=product.title%></h2>
-      <p>
-        Qunantity : <%=product.cartItem.qunatity%>
+      <p class="item-quantity">
+        Qunantity : <%=product.quantity %>
       </p>
+     
       <section>
         <form action="/shop/remove-product-cart" method="POST">
           <input type="hidden" name="id" id="id" value="<%=product.id%>">
@@ -21,10 +22,10 @@
         </form>
       </section>
     </li>
-
     <%}%>
     </ol>
-    <form action="/shop/create-order" method="POST">
+    <hr/>
+    <form class="submit-order-container" action="/shop/create-order" method="POST">
       <button>Submit order</button>
     </form>
 <%} else {%>

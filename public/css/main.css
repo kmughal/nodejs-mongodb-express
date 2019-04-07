@@ -29,6 +29,20 @@ main {
   display: flex;
 }
 
+.submit-order-container {
+  text-align: center;
+}
+
+.item-quantity {
+  width:40%;
+  padding:10px 10px;
+  margin: 10px 10px;
+}
+
+.main-header__item-list h2 {
+  width: 40%
+}
+
 .main-header__item {
   margin: 0 1rem;
   padding: 1rem;
