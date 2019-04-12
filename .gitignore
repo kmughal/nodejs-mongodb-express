@@ -3,3 +3,4 @@ data-store/*.json
 launch.json
 package-lock.json
 settings
+package-lock.json
