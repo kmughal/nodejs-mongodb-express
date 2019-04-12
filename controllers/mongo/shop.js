@@ -39,7 +39,7 @@ const mongodbShopController = {
 	getCart(req, res, next) {
 		try {
 			const cart = req.user.getCart();
-			console.log(cart);
+			console.log("cart:" , cart);
 			res.render("shop/cart", {
 				title: "Product item added successfully!",
 				path: "cart",
@@ -63,11 +63,14 @@ const mongodbShopController = {
 			throw new Error("Failed:Cart , Error :", e);
 		}
 	},
-	getOrders(req, res, next) {
+	
+	async getOrders(req, res, next) {
 		try {
+			const data = await req.user.getOrders();
 			res.render("shop/orders", {
 				title: "Orders",
-				path: "orders"
+				path: "orders",
+			  data  
 			});
 		} catch (e) {
 			throw new Error("Failed:Orders , Error :", e);
@@ -102,9 +105,9 @@ const mongodbShopController = {
 		try {
 			const { id } = req.body;
 		
-			
+		
 			const result = await req.user.removeProductFromCart(req.user.id, id);
-			console.log(result)
+		
 			if (result) {
 				return res.redirect("/shop/cart");
 			}
@@ -112,6 +115,13 @@ const mongodbShopController = {
 		} catch (e) {
 			throw new Error("Shp.removeProductFromCart failed, Error:", e);
 		}
+	},
+	async createOrder(req,res,hext) {
+		const result = await req.user.addOrder();
+		if (result) {
+			return res.redirect("/shop/orders");
+		}
+		
 	}
 };
 

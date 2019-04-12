@@ -48,9 +48,9 @@ router.post("/cart", mongodbShopController.addCart);
 
 router.get("/checkout");
 
-router.post("/create-order");
+router.post("/create-order",mongodbShopController.createOrder);
 
-router.get("/orders");
+router.get("/orders",mongodbShopController.getOrders);
 
 router.post(
 	"/remove-product-cart",

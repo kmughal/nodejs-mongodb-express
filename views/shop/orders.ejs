@@ -4,32 +4,40 @@
 <%- include('../includes/nav.ejs') %>
 <main>
  <h1>Orders</h1>
- <% if(orders.length === 0) {%>
+ <% if(data.length === 0) {%>
   <p>Empty order</p>
 <%}else {%>
-  <p>Orders [<%=orders.length %>]</p>
-  <% orders.forEach( order => {%> 
-      <section>
-        <h1>Order# <%= order.id %></h1>
-       
-       <ul>
-        <%order.products.forEach(prod => {%>
-          <ii>
-            <h2>Title:<%= prod.title %></h2>
-            <p>
-              Description:<%= prod.description %>
-            </p>
-            <p>
-              Unit Price: <%= prod.price %>
-            </p>
-            <p>
-              Qty: <%= prod.orderItem.qunatity %>
-            </p>
-          </ii>
-          <%})%>
-       </ul>
-      </section>
+  <h1>Total orders: <%=data.length %></h1>
+  <section>
+    <h2>Welcome back <%= data[0].username%></h2>
+     
+    <p>All orders email will be sent to <%=data[0].email%></p>
+  </section>
+  <% data.forEach( items => {%> 
+    <section class="order-list-item">
+     <h2>Order #<%= items._id %></h2>
+     <ul>
+     <% items.orders.forEach( prod => {%> 
+      <ii>
+        <h3>Title:<%= prod.title %></h3>
+        <p>
+          Description:<%= prod.description %>
+        </p>
+        <p>
+          Unit Price: <%= prod.price %>
+        </p>
+        <p>
+          Qty: <%= prod.quantity %>
+        </p>
+      </ii>
+      <%})%>
+    </ul>
+  </section>
     <%})%>
   <%}%>
 </main>
 <%- include('../includes/end.ejs') %>
+
+
+
+

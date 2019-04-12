@@ -37,10 +37,8 @@ app.use(
 const {User} = require("./models/mongodb/user");
 app.use(codeToRmove);
 async function codeToRmove(req, res, next) {
-	console.log("in middleware");
 	const user = await User.getById("5ca8eb0d1c9d440000f807b5");
 	req.user = new User(user.username,user.email,user.cart,user._id);
-	
 	next();
 }
 // Set View Engine
