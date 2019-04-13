@@ -3,28 +3,29 @@
 
 <%- include('../includes/nav.ejs') %>
 <main>
+ 
  <h1>Orders</h1>
  <% if(data.length === 0) {%>
   <p>Empty order</p>
 <%}else {%>
   <h1>Total orders: <%=data.length %></h1>
   <section>
-    <h2>Welcome back <%= data[0].username%></h2>
+    <h2>Welcome back <%= data.username%></h2>
      
-    <p>All orders email will be sent to <%=data[0].email%></p>
+    <p>All orders email will be sent to <%=data.email%></p>
   </section>
   <% data.forEach( items => {%> 
     <section class="order-list-item">
-     <h2>Order #<%= items._id %></h2>
+     <h2>Order #<%= items.orderId %></h2>
      <ul>
-     <% items.orders.forEach( prod => {%> 
+     <% items.products.forEach( prod => {%> 
       <ii>
-        <h3>Title:<%= prod.title %></h3>
+        <h3>Title:<%= prod.product.title %></h3>
         <p>
-          Description:<%= prod.description %>
+          Description:<%= prod.product.description %>
         </p>
         <p>
-          Unit Price: <%= prod.price %>
+          Unit Price: <%= prod.product.price %>
         </p>
         <p>
           Qty: <%= prod.quantity %>

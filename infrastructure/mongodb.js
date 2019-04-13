@@ -34,3 +34,4 @@ exports.createMongoClient = createMongoClient;
 exports.getDb = getDb;
 exports.getCollection = getCollection;
 exports.toObjectId = toObjectId;
+exports.dbUrl = url;

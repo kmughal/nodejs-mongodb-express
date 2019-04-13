@@ -4,18 +4,19 @@
 <%- include('../includes/nav.ejs') %>
 <main>
   <h1>cart</h1>
+ 
   <% if (cart.items && cart.items.length > 0) {%>
   <ol>
-    <%for(let product of cart.items) {%>
+    <%for(let item of cart.items) {%>
     <li class="main-header__item-list shadow">
-      <h2> <%=product.title%></h2>
+      <h2> <%=item.productId.title%></h2>
       <p class="item-quantity">
-        Qunantity : <%=product.quantity %>
+        Qunantity : <%=item.quantity %>
       </p>
      
       <section>
         <form action="/shop/remove-product-cart" method="POST">
-          <input type="hidden" name="id" id="id" value="<%=product.id%>">
+          <input type="hidden" name="id" id="id" value="<%=item.productId._id%>">
           <button>
             Delete Item
           </button>

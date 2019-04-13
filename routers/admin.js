@@ -19,18 +19,32 @@ const router = express.Router();
 
 // router.post("/delete-product", sequelizerAdminController.deleteProduct);
 
-const { mongodbAdminController } = require("../controllers/mongo/admin");
+// const { mongodbAdminController } = require("../controllers/mongo/admin");
 
-router.get("/add-product", mongodbAdminController.initProduct);
+// router.get("/add-product", mongodbAdminController.initProduct);
 
-router.post("/add-product", mongodbAdminController.addProduct);
+// router.post("/add-product", mongodbAdminController.addProduct);
 
-router.get("/edit-product/:id",mongodbAdminController.editProduct);
+// router.get("/edit-product/:id",mongodbAdminController.editProduct);
 
-router.post("/edit-product",mongodbAdminController.updateProduct);
+// router.post("/edit-product",mongodbAdminController.updateProduct);
 
-router.get("/products",mongodbAdminController.getProducts);
+// router.get("/products",mongodbAdminController.getProducts);
 
-router.post("/delete-product",mongodbAdminController.deleteProduct);
+// router.post("/delete-product",mongodbAdminController.deleteProduct);
+
+const {mongooseAdminController} = require("../controllers/mongoose/admin");
+
+router.get("/add-product",mongooseAdminController.initProduct);
+
+router.post("/add-product",mongooseAdminController.addProduct);
+
+router.get("/edit-product/:id",mongooseAdminController.editProduct);
+
+router.post("/edit-product",mongooseAdminController.updateProduct);
+
+router.get("/products",mongooseAdminController.getProducts);
+
+router.post("/delete-product",mongooseAdminController.deleteProduct);
 
 module.exports.router = router;

@@ -32,29 +32,53 @@ const router = express.Router();
 // );
 
 //Mongodb controller
-const { mongodbShopController } = require("../controllers/mongo/shop");
+// const { mongodbShopController } = require("../controllers/mongo/shop");
 
-router.get("/", mongodbShopController.createInitialViewModel);
+// router.get("/", mongodbShopController.createInitialViewModel);
+
+// router.get("/index");
+
+// router.get("/product", mongodbShopController.getProducts);
+
+// router.get("/product/:id", mongodbShopController.getProductById);
+
+// router.get("/cart", mongodbShopController.getCart);
+
+// router.post("/cart", mongodbShopController.addCart);
+
+// router.get("/checkout");
+
+// router.post("/create-order",mongodbShopController.createOrder);
+
+// router.get("/orders",mongodbShopController.getOrders);
+
+// router.post(
+// 	"/remove-product-cart",
+// 	mongodbShopController.removePrdouctFromCart
+// );
+
+const { mongoosedbShopController } = require("../controllers/mongoose/shop");
+router.get("/");
 
 router.get("/index");
 
-router.get("/product", mongodbShopController.getProducts);
+router.get("/product", mongoosedbShopController.getProducts);
 
-router.get("/product/:id", mongodbShopController.getProductById);
+router.get("/product/:id", mongoosedbShopController.getProductById);
 
-router.get("/cart", mongodbShopController.getCart);
+router.get("/cart", mongoosedbShopController.getCart);
 
-router.post("/cart", mongodbShopController.addCart);
+router.post("/cart", mongoosedbShopController.addCart);
 
 router.get("/checkout");
 
-router.post("/create-order",mongodbShopController.createOrder);
+router.post("/create-order", mongoosedbShopController.createOrder);
 
-router.get("/orders",mongodbShopController.getOrders);
+router.get("/orders", mongoosedbShopController.getOrders);
 
 router.post(
 	"/remove-product-cart",
-	mongodbShopController.removePrdouctFromCart
+	mongoosedbShopController.removePrdouctFromCart
 );
 
 module.exports = router;

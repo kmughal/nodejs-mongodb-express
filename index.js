@@ -34,13 +34,13 @@ app.use(
 	express.static(path.resolve(__dirname, "public"))
 );
 
-const {User} = require("./models/mongodb/user");
-app.use(codeToRmove);
-async function codeToRmove(req, res, next) {
-	const user = await User.getById("5ca8eb0d1c9d440000f807b5");
-	req.user = new User(user.username,user.email,user.cart,user._id);
-	next();
-}
+//const { User } = require("./models/mongodb/user");
+// app.use(codeToRmove);
+// async function codeToRmove(req, res, next) {
+// 	const user = await User.getById("5ca8eb0d1c9d440000f807b5");
+// 	req.user = new User(user.username, user.email, user.cart, user._id);
+// 	next();
+// }
 // Set View Engine
 // app.set("view engine" , "pug");
 // app.engine("hbs",hb({layoutsDir:"views/layouts" , defaultLayout: "main-layout.hbs"}));
@@ -48,6 +48,24 @@ async function codeToRmove(req, res, next) {
 app.set("view engine", "ejs");
 
 // Routes
+// Mongodb client
+//const { createMongoClient } = require("./infrastructure/mongodb");
+const mongoose = require("mongoose");
+const { dbUrl } = require("./infrastructure/mongodb");
+const {UserModel} = require("./models/mongoose/user");
+
+
+app.use(async (req,res,next)=> {
+	let user = await UserModel.findOne({email : "test@gmail.com"});
+	if (!user) {
+		user = new UserModel({username : "khurram" , email : "test@gmail.com" , cart : {items : []}});
+		user.save();
+	}
+
+	req.user = user;
+	return next();
+	
+})
 const adminRoutes = require("./routers/admin");
 const shopRoutes = require("./routers/shop");
 const { get404 } = require("./controllers/not-found");
@@ -56,6 +74,9 @@ app.use("/shop", shopRoutes);
 app.use(get404);
 
 //ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'
+
+
+
 
 // Express Js server
 const http = require("http");
@@ -82,12 +103,14 @@ const server = http.createServer(app);
 //   sequelize
 // } = require("./infrastructure/sequelize-database");
 
-// Mongodb client
-const { createMongoClient } = require("./infrastructure/mongodb");
 
 server.listen(3000, async () => {
-  console.log("connected!", new Date());
-	await createMongoClient();
+	console.log("connected!", new Date());
+	await mongoose.connect(dbUrl, { useNewUrlParser: true });
+
+
+	// Mongo db
+	//await createMongoClient();
 	// await sequelize.sync();
 	// .sync({
 	//   force: true
