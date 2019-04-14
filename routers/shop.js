@@ -58,26 +58,30 @@ const router = express.Router();
 // );
 
 const { mongoosedbShopController } = require("../controllers/mongoose/shop");
+
+const { isAuth } = require("../middlewares/is-auth");
+
 router.get("/");
 
 router.get("/index");
 
 router.get("/product", mongoosedbShopController.getProducts);
 
-router.get("/product/:id", mongoosedbShopController.getProductById);
+router.get("/product/:id", isAuth, mongoosedbShopController.getProductById);
 
-router.get("/cart", mongoosedbShopController.getCart);
+router.get("/cart", isAuth, mongoosedbShopController.getCart);
 
-router.post("/cart", mongoosedbShopController.addCart);
+router.post("/cart", isAuth, mongoosedbShopController.addCart);
 
 router.get("/checkout");
 
-router.post("/create-order", mongoosedbShopController.createOrder);
+router.post("/create-order", isAuth, mongoosedbShopController.createOrder);
 
-router.get("/orders", mongoosedbShopController.getOrders);
+router.get("/orders", isAuth, mongoosedbShopController.getOrders);
 
 router.post(
 	"/remove-product-cart",
+	isAuth,
 	mongoosedbShopController.removePrdouctFromCart
 );
 

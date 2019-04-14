@@ -8,8 +8,7 @@ const mongoosedbShopController = {
 		try {
 			res.render("shop/index", {
 				title: "Index",
-				path: "index",
-				isAuthenticated: req.session.isAuthenticated
+				path: "index"
 			});
 		} catch (e) {
 			throw new Error("Failed:Index , Error :", e);
@@ -22,8 +21,7 @@ const mongoosedbShopController = {
 			res.render("shop/shop-list", {
 				title: "Products",
 				path: "products",
-				products,
-				isAuthenticated: req.session.isAuthenticated
+				products
 			});
 		} catch (e) {
 			throw new Error("Failed:Shop.Product , Error :", e);
@@ -37,8 +35,8 @@ const mongoosedbShopController = {
 			res.render("product/detail", {
 				title: product.title,
 				path: "product-detail",
-				product,
-				isAuthenticated: req.session.isAuthenticated
+				product
+				
 			});
 		} catch (e) {
 			throw new Error("Failed:Shop.Product , Error :", e);
@@ -46,14 +44,18 @@ const mongoosedbShopController = {
 	},
 	async getCart(req, res, next) {
 		try {
+			console.log("getcart")
 			const { cart } = await req.user
 				.populate("cart.items.productId")
 				.execPopulate();
+		 //const cart = {items : []}
+			// const cart = {items : []};
+			 console.log("cart:",cart)
+			 console.log("going to call middleware")
 			res.render("shop/cart", {
 				title: "Product item added successfully!",
 				path: "cart",
-				cart,
-				isAuthenticated: req.session.isAuthenticated
+				cart
 			});
 		} catch (e) {
 			throw new Error("Failed:Cart , Error :", e);
@@ -64,11 +66,12 @@ const mongoosedbShopController = {
 
 		try {
 			const product = await ProductModel.findById(id);
+		  console.log("Product:",product)
 			await req.user.addToCart(product);
+			 
 			res.render("shop/product-added-to-cart", {
 				title: "Product item added successfully!",
-				path: "cart",
-				isAuthenticated: req.session.isAuthenticated
+				path: "cart"
 			});
 		} catch (e) {
 			throw new Error("Failed:Cart , Error :", e);
@@ -89,8 +92,7 @@ const mongoosedbShopController = {
 			res.render("shop/orders", {
 				title: "Orders",
 				path: "orders",
-				data,
-				isAuthenticated: req.session.isAuthenticated
+				data
 			});
 		} catch (e) {
 			throw new Error("Failed:Orders , Error :", e);
@@ -100,8 +102,7 @@ const mongoosedbShopController = {
 		try {
 			res.render("shop/checkout", {
 				title: "Checkout",
-				path: "cart",
-				isAuthenticated: req.session.isAuthenticated
+				path: "cart"
 			});
 		} catch (e) {
 			throw new Error("Failed:Checkout , Error :", e);
@@ -116,8 +117,7 @@ const mongoosedbShopController = {
 				path: "shop",
 				productExists: products.length > 0,
 				activeShop: true,
-				activeAddProduct: false,
-				isAuthenticated: req.session.isAuthenticated
+				activeAddProduct: false
 			});
 		} catch (e) {
 			throw new Error("Fail to get products.");

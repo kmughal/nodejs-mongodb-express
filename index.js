@@ -3,6 +3,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 // const hb = require("express-handlebars");
 const session = require("express-session");
+const flash = require("connect-flash");
+
+
 session({
 	secret: "foo bar",
 	resave: false /* dont save session for every request only if something is changed then do so*/,
@@ -12,7 +15,7 @@ const MongoDbSessionStore = require("connect-mongodb-session")(session);
 const { dbUrl } = require("./infrastructure/mongodb");
 const store = new MongoDbSessionStore({ uri: dbUrl, collection: "sessions" });
 const app = express();
-
+const csurf = require("csurf");
 // Orms
 // const {
 //   UserModel
@@ -34,6 +37,7 @@ const app = express();
 // } = require("./models/orms/order-item");
 
 // Middlewares
+const protectionToken = csurf();
 app.use(
 	bodyParser.urlencoded({
 		extended: false
@@ -45,7 +49,9 @@ app.use(
 		resave: false /* dont save session for every request only if something is changed then do so*/,
 		saveUninitialized: false,
 		store:store
-	})
+	}),
+	protectionToken,
+	flash()
 );
 
 //const { User } = require("./models/mongodb/user");
@@ -70,9 +76,10 @@ const { UserModel } = require("./models/mongoose/user");
 app.use(async (req, res, next) => {
 	if(!req.session.user) return next();
 	let user = await UserModel.findById(req.session.user._id);
+	
 	if (!user) {
 		user = new UserModel({
-			username: "khurram",
+			password: "123",
 			email: "test@gmail.com",
 			cart: { items: [] }
 		});
@@ -80,8 +87,17 @@ app.use(async (req, res, next) => {
 	}
 
 	req.user = user;
+	req.u = user;
 	return next();
 });
+
+// Add locals
+app.use((req,res,next) => {
+	res.locals.isAuthenticated = req.session.isAuthenticated;
+	res.locals.csrfToken = req.csrfToken();
+	next();
+})
+
 const adminRoutes = require("./routers/admin");
 const shopRoutes = require("./routers/shop");
 const { get404 } = require("./controllers/not-found");

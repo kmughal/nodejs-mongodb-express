@@ -30,6 +30,7 @@
         <a class="cart__actions-button" href="/admin/edit-product/<%=product.id%>">Edit Product</a>
         <form action="/admin/delete-product" method="POST">
           <input type="hidden" name="id" id="id" value="<%=product.id%>"/>
+          <input type="hidden" value="<%=csrfToken%>"/>
           <button>Delete Product</button>
         </form>
       </section>
