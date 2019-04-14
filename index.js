@@ -3,7 +3,14 @@ const express = require("express");
 const bodyParser = require("body-parser");
 // const hb = require("express-handlebars");
 const session = require("express-session");
-
+session({
+	secret: "foo bar",
+	resave: false /* dont save session for every request only if something is changed then do so*/,
+	saveUninitialized: false
+});
+const MongoDbSessionStore = require("connect-mongodb-session")(session);
+const { dbUrl } = require("./infrastructure/mongodb");
+const store = new MongoDbSessionStore({ uri: dbUrl, collection: "sessions" });
 const app = express();
 
 // Orms
@@ -34,9 +41,10 @@ app.use(
 	bodyParser.json(),
 	express.static(path.resolve(__dirname, "public")),
 	session({
-		secret: 'foo bar',
+		secret: "foo bar",
 		resave: false /* dont save session for every request only if something is changed then do so*/,
-		saveUninitialized: false
+		saveUninitialized: false,
+		store:store
 	})
 );
 
@@ -57,7 +65,6 @@ app.set("view engine", "ejs");
 // Mongodb client
 //const { createMongoClient } = require("./infrastructure/mongodb");
 const mongoose = require("mongoose");
-const { dbUrl } = require("./infrastructure/mongodb");
 const { UserModel } = require("./models/mongoose/user");
 
 app.use(async (req, res, next) => {
