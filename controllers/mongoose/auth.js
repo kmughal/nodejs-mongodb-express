@@ -5,11 +5,10 @@ const { passwordHelpers } = require("../../common/password-hashing");
 exports.AuthController = class AuthController {
 	index(req, res, next) {
 		//const isAuthenticated = req.session.isAuthenticated;
-		console.log(req.session.isAuthenticated);
+		// console.log(req.session.isAuthenticated);
 		const vm = {
 			path: "login",
-			title: "Sign in",
-			isAuthenticated: req.session.isAuthenticated
+			title: "Sign in"
 		};
 		res.render("login/index", vm);
 	}
@@ -39,7 +38,12 @@ exports.AuthController = class AuthController {
 	}
 
 	signup(req, res, next) {
-		const vm = { path: "signup", title: "Sign up", isAuthenticated: false };
+		const vm = {
+			path: "signup",
+			title: "Sign up",
+			isAuthenticated: false,
+			
+		};
 		res.render("login/signup", vm);
 	}
 

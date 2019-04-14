@@ -16,6 +16,7 @@
   <div class="form-control">
       <input type="submit" value="Sign in">
     </div>
+    <input type="hidden" name="_csrf"  value="<%=csrfToken%>"/>
 </form>
 </main>
 <%- include('../includes/end.ejs') %>

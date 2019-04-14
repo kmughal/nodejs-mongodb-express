@@ -17,6 +17,7 @@
       <section>
         <form action="/shop/remove-product-cart" method="POST">
           <input type="hidden" name="id" id="id" value="<%=item.productId._id%>">
+          <input type="hidden" name="_csrf"  value="<%=csrfToken%>"/>
           <button>
             Delete Item
           </button>
@@ -28,6 +29,7 @@
     <hr/>
     <form class="submit-order-container" action="/shop/create-order" method="POST">
       <button>Submit order</button>
+      <input type="hidden" name="_csrf"  value="<%=csrfToken%>"/>
     </form>
 <%} else {%>
     <p>No product!</p>

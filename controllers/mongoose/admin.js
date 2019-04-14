@@ -1,5 +1,5 @@
 const { ProductModel } = require("../../models/mongoose/product");
-const {cookieHelper} = require("../../common/cookie-helper");
+const { cookieHelper } = require("../../common/cookie-helper");
 
 class mongooseAdminController {
 	static initProduct(req, res, next) {
@@ -7,8 +7,7 @@ class mongooseAdminController {
 			title: "Add new Product",
 			path: "add-product",
 			activeShop: false,
-			activeAddProduct: true,
-			isAuthenticated: req.session.isAuthenticated
+			activeAddProduct: true
 		};
 		res.render("admin/add-product", vm);
 	}
@@ -38,8 +37,7 @@ class mongooseAdminController {
 				return res.render("product/edit-product", {
 					path: "edit-product",
 					title: `Edit - ${product.title}`,
-					product,
-					isAuthenticated : req.session.isAuthenticated
+					product
 				});
 			} else return res.render("/admin/edit-product");
 		} catch (e) {
@@ -53,8 +51,7 @@ class mongooseAdminController {
 		res.render("admin/product-list", {
 			title: "Admin Products",
 			path: "admin-product",
-			products,
-			isAuthenticated : req.session.isAuthenticated
+			products
 		});
 	}
 
