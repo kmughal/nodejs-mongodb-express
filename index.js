@@ -36,10 +36,7 @@ app.use(
 	session({
 		secret: 'foo bar',
 		resave: false /* dont save session for every request only if something is changed then do so*/,
-		saveUninitialized: false,
-		cookie : {
-			maxAge : 10
-		}
+		saveUninitialized: false
 	})
 );
 
