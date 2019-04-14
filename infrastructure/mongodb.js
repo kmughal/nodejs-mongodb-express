@@ -1,9 +1,10 @@
 const { MongoClient,ObjectID } = require("mongodb");
 const fs = require("fs");
 const settingFilePath = require("path").resolve(__dirname,"../settings" , "mongo.json");
-
+const {getSettings} = require("../common/setting-helper");
+const mongoSettings = getSettings("mongo");
 let url = fs.existsSync(settingFilePath) ?
-require(settingFilePath).url: "mongodb://localhost:27017/MyTasks";
+mongoSettings.url: "mongodb://localhost:27017/MyTasks";
 
 let _client;
 let _db;
