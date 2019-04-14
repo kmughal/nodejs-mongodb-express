@@ -16,9 +16,12 @@
           <li class="main-header__item <%= path ==='login' ? 'active' : ''%>">
               <a href="/auth/signin">Login </a>
             </li>  
+            <li class="main-header__item <%= path ==='siginup' ? 'active' : ''%>">
+                <a href="/auth/signup">Signup </a>
+              </li>  
         <%}%>
         <% if (isAuthenticated) {%>
-          <li class="main-header__item <%= path ==='login' ? 'active' : ''%>">
+          <li class="main-header__item <%= path ==='logout' ? 'active' : ''%>">
               <a href="/auth/logout">Logout </a>
             </li>  
         <%}%>
