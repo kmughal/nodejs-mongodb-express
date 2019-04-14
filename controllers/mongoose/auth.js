@@ -1,6 +1,6 @@
 const { cookieHelper } = require("../../common/cookie-helper");
 const { UserModel } = require("../../models/mongoose/user");
-const {passwordHelpers} = require("../../common/password-hashing");
+const { passwordHelpers } = require("../../common/password-hashing");
 
 exports.AuthController = class AuthController {
 	index(req, res, next) {
@@ -15,11 +15,21 @@ exports.AuthController = class AuthController {
 	}
 
 	async signin(req, res, next) {
+		const { email, password } = req.body;
+		const user = await UserModel.findOne({ email });
+		if (!user) return res.redirect("/auth/signin");
+		const validatePassword = await passwordHelpers.decrypt(
+			password,
+			user.password
+		);
+		if (!validatePassword) res.redirect("/auth/signin");
+
+		req.user = user;
 		res.setHeader("Set-Cookie", "isAuthenticated=true; max-age=10;");
 		req.session.isAuthenticated = true;
 		req.session.user = req.user;
 		await req.session.save();
-		res.redirect("/auth/signin");
+		res.redirect("/shop/product");
 	}
 
 	async logout(req, res, next) {
