@@ -68,7 +68,8 @@ const mongoose = require("mongoose");
 const { UserModel } = require("./models/mongoose/user");
 
 app.use(async (req, res, next) => {
-	let user = await UserModel.findOne({ email: "test@gmail.com" });
+	if(!req.session.user) return next();
+	let user = await UserModel.findById(req.session.user._id);
 	if (!user) {
 		user = new UserModel({
 			username: "khurram",
