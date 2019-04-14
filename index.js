@@ -3,6 +3,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 // const hb = require("express-handlebars");
 const session = require("express-session");
+connect flash = require("connect-flash");
+
+
 session({
 	secret: "foo bar",
 	resave: false /* dont save session for every request only if something is changed then do so*/,
@@ -47,7 +50,8 @@ app.use(
 		saveUninitialized: false,
 		store:store
 	}),
-	protectionToken
+	protectionToken,
+	flash()
 );
 
 //const { User } = require("./models/mongodb/user");
