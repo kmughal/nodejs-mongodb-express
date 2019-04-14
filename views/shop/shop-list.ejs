@@ -30,7 +30,9 @@
         <form class="card__actions-item" action="/shop/product/<%=product.id%>" method="get">
           <button>Detail</button>
         </form>
-        <%- include('../includes/add-t-cart.ejs',{product : product}) %>
+        <% if (isAuthenticated) {%> 
+          <%- include('../includes/add-t-cart.ejs',{product : product}) %>  
+        <%}%>
       </section>
     </article>
     <%}%>

@@ -13,9 +13,12 @@
     </picture>
     <h2><%=product.price%></h2>
     <p><%=product.description%></p>
-    <section class="card__actions">
-      <%- include('../includes/add-t-cart.ejs') %>
-    </section>
+    <% if (isAuthenticated) {%>
+      <section class="card__actions">
+          <%- include('../includes/add-t-cart.ejs') %>
+        </section>  
+    <%}%>
+    
   </article>
 
 </main>
