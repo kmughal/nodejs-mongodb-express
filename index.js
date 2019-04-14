@@ -72,7 +72,7 @@ app.use(async (req, res, next) => {
 	let user = await UserModel.findById(req.session.user._id);
 	if (!user) {
 		user = new UserModel({
-			username: "khurram",
+			password: "123",
 			email: "test@gmail.com",
 			cart: { items: [] }
 		});
