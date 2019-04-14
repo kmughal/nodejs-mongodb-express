@@ -25,4 +25,13 @@ exports.AuthController = class AuthController {
 			res.redirect("/auth/signin");
 		});
 	}
+
+	signup(req, res, next) {
+		const vm = { path: "signup", title: "Sign up",isAuthenticated:false };
+		res.render("login/signup", vm);
+	}
+
+	postSignup(req,res,next) {
+
+	}
 };
