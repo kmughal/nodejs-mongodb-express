@@ -15,6 +15,7 @@ exports.AuthController = class AuthController {
 	signin(req, res, next) {
 		res.setHeader("Set-Cookie" , "isAuthenticated=true; max-age=10;");
 		req.session.isAuthenticated = true;
+		req.session.user = req.user;
 		res.redirect("/auth/signin");
 	}
 
