@@ -17,4 +17,10 @@ exports.AuthController = class AuthController {
 		req.session.isAuthenticated = true;
 		res.redirect("/auth/signin");
 	}
+
+	async logout(req,res,next) {
+		await req.session.destroy(()=> {
+			res.redirect("/auth/signin");
+		});
+	}
 };
