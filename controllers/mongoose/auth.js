@@ -1,5 +1,5 @@
 const { cookieHelper } = require("../../common/cookie-helper");
-
+const {UserModel} = require("../../models/mongoose/user");
 exports.AuthController = class AuthController {
 	index(req, res, next) {
 		//const isAuthenticated = req.session.isAuthenticated;
@@ -27,11 +27,20 @@ exports.AuthController = class AuthController {
 	}
 
 	signup(req, res, next) {
-		const vm = { path: "signup", title: "Sign up",isAuthenticated:false };
+		const vm = { path: "signup", title: "Sign up", isAuthenticated: false };
 		res.render("login/signup", vm);
 	}
 
-	postSignup(req,res,next) {
-
+	async postSignup(req, res, next) {
+		const { email, password, confirmPassword } = req.body;
+		const userDetails = await UserModel.findOne({email : email});
+		if (userDetails) return res.redirect("login/signup");
+	  const newUser = new UserModel({
+			email: email,
+			password : password,
+			cart: { items: [] }
+		});
+		await newUser.save();
+		res.redirect("/auth/signin");
 	}
 };
