@@ -5,8 +5,19 @@
         <li class="main-header__item <%= path ==='product' ? 'active' : ''%>"><a href="/shop/product">Products</a></li>
         <li class="main-header__item <%= path ==='cart' ? 'active' : ''%>"><a href="/shop/cart">Cart</a></li>
         <li class="main-header__item <%= path ==='orders' ? 'active' : ''%>"><a href="/shop/orders">Orders</a></li>
+        <% if (isAuthenticated) {%>
         <li class="main-header__item <%= path ==='add-product' ? 'active' : ''%>"><a href="/admin/add-product">Add Product</a></li>
         <li class="main-header__item <%= path ==='admin-products' ? 'active' : ''%>"><a href="/admin/products">Admin Products</a></li>
+        <% } %>
+      </ul>
+      
+      <ul class="main-header__item-list">
+        <li class="main-header__item <%= path ==='login' ? 'active' : ''%>">
+          <a href="/auth/signin">Login </a>
+        </li>
+        <li class="main-header__item <%= path ==='login' ? 'active' : ''%>">
+                <a href="/auth/logout">Logout </a>
+        </li>
       </ul>
     </nav>
   </header>

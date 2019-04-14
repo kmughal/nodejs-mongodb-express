@@ -20,6 +20,8 @@ main {
   display: flex;
   height: 100%;
   align-items: center;
+  width:100%;
+  justify-content: space-between
 }
 
 .main-header__item-list {
@@ -88,7 +90,13 @@ picture {
 
 img {
   height: 200px;
-  width: 200px
+  width: 200px;
+  filter: blur(4px);
+}
+
+img:hover {
+  filter: blur(0px);
+  transition: filter 0.5s;
 }
 
 article {
@@ -195,4 +203,8 @@ a.cart__actions-button {
   padding:10px 10px;
   margin:10px 10px;
   border-radius :2px 2px;
+}
+
+h1.main-heading {
+  text-align: center;
 }

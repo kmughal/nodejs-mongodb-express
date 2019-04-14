@@ -2,7 +2,15 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 // const hb = require("express-handlebars");
-
+const session = require("express-session");
+session({
+	secret: "foo bar",
+	resave: false /* dont save session for every request only if something is changed then do so*/,
+	saveUninitialized: false
+});
+const MongoDbSessionStore = require("connect-mongodb-session")(session);
+const { dbUrl } = require("./infrastructure/mongodb");
+const store = new MongoDbSessionStore({ uri: dbUrl, collection: "sessions" });
 const app = express();
 
 // Orms
@@ -31,7 +39,13 @@ app.use(
 		extended: false
 	}),
 	bodyParser.json(),
-	express.static(path.resolve(__dirname, "public"))
+	express.static(path.resolve(__dirname, "public")),
+	session({
+		secret: "foo bar",
+		resave: false /* dont save session for every request only if something is changed then do so*/,
+		saveUninitialized: false,
+		store:store
+	})
 );
 
 //const { User } = require("./models/mongodb/user");
@@ -51,32 +65,33 @@ app.set("view engine", "ejs");
 // Mongodb client
 //const { createMongoClient } = require("./infrastructure/mongodb");
 const mongoose = require("mongoose");
-const { dbUrl } = require("./infrastructure/mongodb");
-const {UserModel} = require("./models/mongoose/user");
+const { UserModel } = require("./models/mongoose/user");
 
-
-app.use(async (req,res,next)=> {
-	let user = await UserModel.findOne({email : "test@gmail.com"});
+app.use(async (req, res, next) => {
+	let user = await UserModel.findOne({ email: "test@gmail.com" });
 	if (!user) {
-		user = new UserModel({username : "khurram" , email : "test@gmail.com" , cart : {items : []}});
+		user = new UserModel({
+			username: "khurram",
+			email: "test@gmail.com",
+			cart: { items: [] }
+		});
 		user.save();
 	}
 
 	req.user = user;
 	return next();
-	
-})
+});
 const adminRoutes = require("./routers/admin");
 const shopRoutes = require("./routers/shop");
 const { get404 } = require("./controllers/not-found");
+const { authRoutes } = require("./routers/auth");
+
 app.use("/admin", adminRoutes.router);
 app.use("/shop", shopRoutes);
+app.use("/auth", authRoutes);
 app.use(get404);
 
 //ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'
-
-
-
 
 // Express Js server
 const http = require("http");
@@ -103,11 +118,9 @@ const server = http.createServer(app);
 //   sequelize
 // } = require("./infrastructure/sequelize-database");
 
-
 server.listen(3000, async () => {
 	console.log("connected!", new Date());
 	await mongoose.connect(dbUrl, { useNewUrlParser: true });
-
 
 	// Mongo db
 	//await createMongoClient();
