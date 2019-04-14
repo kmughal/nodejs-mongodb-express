@@ -2,6 +2,7 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 // const hb = require("express-handlebars");
+const session = require("express-session");
 
 const app = express();
 
@@ -31,7 +32,15 @@ app.use(
 		extended: false
 	}),
 	bodyParser.json(),
-	express.static(path.resolve(__dirname, "public"))
+	express.static(path.resolve(__dirname, "public")),
+	session({
+		secret: 'foo bar',
+		resave: false /* dont save session for every request only if something is changed then do so*/,
+		saveUninitialized: false,
+		cookie : {
+			maxAge : 10
+		}
+	})
 );
 
 //const { User } = require("./models/mongodb/user");
