@@ -1,12 +1,14 @@
 const { ProductModel } = require("../../models/mongoose/product");
-const Product = {};
+const {cookieHelper} = require("../../common/cookie-helper");
+
 class mongooseAdminController {
 	static initProduct(req, res, next) {
 		var vm = {
 			title: "Add new Product",
 			path: "add-product",
 			activeShop: false,
-			activeAddProduct: true
+			activeAddProduct: true,
+			isAuthenticated: cookieHelper.isAuthenticated(req)
 		};
 		res.render("admin/add-product", vm);
 	}
@@ -14,7 +16,13 @@ class mongooseAdminController {
 	static async addProduct(req, res, next) {
 		const { title, description, imageUrl, price } = req.body;
 
-		const product = new ProductModel({ title, description, price, imageUrl,userId : req.user /* mongoose will pick up user._id*/ });
+		const product = new ProductModel({
+			title,
+			description,
+			price,
+			imageUrl,
+			userId: req.user /* mongoose will pick up user._id*/
+		});
 
 		await product.save();
 		res.redirect("/admin/add-product");
@@ -25,12 +33,13 @@ class mongooseAdminController {
 
 		try {
 			const product = await ProductModel.findById(id).populate("userId");
-			console.log(product)
+			console.log(product);
 			if (product) {
 				return res.render("product/edit-product", {
 					path: "edit-product",
 					title: `Edit - ${product.title}`,
-					product
+					product,
+					isAuthenticated : cookieHelper.isAuthenticated(req)
 				});
 			} else return res.render("/admin/edit-product");
 		} catch (e) {
@@ -44,7 +53,8 @@ class mongooseAdminController {
 		res.render("admin/product-list", {
 			title: "Admin Products",
 			path: "admin-product",
-			products
+			products,
+			isAuthenticated : cookieHelper.isAuthenticated(req)
 		});
 	}
 
