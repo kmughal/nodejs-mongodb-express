@@ -3,7 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 // const hb = require("express-handlebars");
 const session = require("express-session");
-connect flash = require("connect-flash");
+const flash = require("connect-flash");
 
 
 session({
@@ -74,7 +74,7 @@ const mongoose = require("mongoose");
 const { UserModel } = require("./models/mongoose/user");
 
 app.use(async (req, res, next) => {
-	//if(!req.session.user) return next();
+	if(!req.session.user) return next();
 	let user = await UserModel.findById(req.session.user._id);
 	
 	if (!user) {

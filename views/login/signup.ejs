@@ -3,6 +3,9 @@
 
 <%- include('../includes/nav.ejs') %>
 <main>
+<% errorMessages.forEach(message => {%> 
+    <p class="alert alert--danger"><%=message%></p>   
+<%})%>
 <h1 class="main-heading">Create a new account</h1>
 <form action="/auth/signup" method="POST">
   <div class="form-control">

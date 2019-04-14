@@ -5,10 +5,12 @@ const { passwordHelpers } = require("../../common/password-hashing");
 exports.AuthController = class AuthController {
 	index(req, res, next) {
 		//const isAuthenticated = req.session.isAuthenticated;
-		// console.log(req.session.isAuthenticated);
+		const errorMessages = req.flash("error");
+		console.log("error:", errorMessages);
 		const vm = {
 			path: "login",
-			title: "Sign in"
+			title: "Sign in",
+			errorMessages
 		};
 		res.render("login/index", vm);
 	}
@@ -16,12 +18,18 @@ exports.AuthController = class AuthController {
 	async signin(req, res, next) {
 		const { email, password } = req.body;
 		const user = await UserModel.findOne({ email });
-		if (!user) return res.redirect("/auth/signin");
+		if (!user) {
+			req.flash("error", "Invalid account information.");
+			return res.redirect("/auth/signin");
+		}
 		const validatePassword = await passwordHelpers.decrypt(
 			password,
 			user.password
 		);
-		if (!validatePassword) res.redirect("/auth/signin");
+		if (!validatePassword) {
+			req.flash("error", "Invalid account information.");
+			return res.redirect("/auth/signin");
+		}
 
 		req.user = user;
 		res.setHeader("Set-Cookie", "isAuthenticated=true; max-age=10;");
@@ -38,11 +46,12 @@ exports.AuthController = class AuthController {
 	}
 
 	signup(req, res, next) {
+		const errorMessages = req.flash("error");
 		const vm = {
 			path: "signup",
 			title: "Sign up",
 			isAuthenticated: false,
-			
+			errorMessages
 		};
 		res.render("login/signup", vm);
 	}
@@ -50,7 +59,14 @@ exports.AuthController = class AuthController {
 	async postSignup(req, res, next) {
 		const { email, password, confirmPassword } = req.body;
 		const userDetails = await UserModel.findOne({ email: email });
-		if (userDetails) return res.redirect("login/signup");
+		if (userDetails) {
+			req.flash("error", "account already exists!");
+			return res.redirect("/auth/signup");
+		}
+		if (password !== confirmPassword) {
+			req.flash("error", "Password doesn't matches with confirm password!");
+			return res.redirect("/auth/signup");
+		}
 		const hashedPassword = await passwordHelpers.encrypt(password);
 		const newUser = new UserModel({
 			email: email,

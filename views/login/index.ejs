@@ -4,6 +4,9 @@
 <%- include('../includes/nav.ejs') %>
 <main>
 <h1 class="main-heading">Login Window</h1>
+<% errorMessages.forEach(message => {%> 
+    <p class="alert alert--danger"><%=message%></p>   
+     <%})%>
 <form action="/auth/signin/" method="POST">
   <div class="form-control">
       <label for="email">Email Address</label>
