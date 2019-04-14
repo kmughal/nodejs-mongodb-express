@@ -1,7 +1,17 @@
 const { cookieHelper } = require("../../common/cookie-helper");
 const { UserModel } = require("../../models/mongoose/user");
 const { passwordHelpers } = require("../../common/password-hashing");
-
+const nodeMailer = require("nodemailer");
+const sendgridTransport = require("nodemailer-sendgrid-transport");
+const {getSettings} = require("../../common/setting-helper");
+const settings =  getSettings("send-grid");
+const transporter = 
+nodeMailer.createTransport(sendgridTransport({
+	auth : {
+	 
+		api_key : settings.api_key
+	}
+}));
 exports.AuthController = class AuthController {
 	index(req, res, next) {
 		//const isAuthenticated = req.session.isAuthenticated;
@@ -36,6 +46,13 @@ exports.AuthController = class AuthController {
 		req.session.isAuthenticated = true;
 		req.session.user = req.user;
 		await req.session.save();
+		console.log("send email")
+		await transporter.sendMail({
+			to : "kmughal@gmail.com",
+			from : "kmughal@gmail.com",
+			subject: "test email" ,
+			html:"hello from me"
+		});
 		res.redirect("/shop/product");
 	}
 
