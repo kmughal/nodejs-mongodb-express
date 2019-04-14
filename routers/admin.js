@@ -33,18 +33,19 @@ const router = express.Router();
 
 // router.post("/delete-product",mongodbAdminController.deleteProduct);
 
-const {mongooseAdminController} = require("../controllers/mongoose/admin");
+const { mongooseAdminController } = require("../controllers/mongoose/admin");
+const { isAuth } = require("../middlewares/is-auth");
 
-router.get("/add-product",mongooseAdminController.initProduct);
+router.get("/add-product", isAuth, mongooseAdminController.initProduct);
 
-router.post("/add-product",mongooseAdminController.addProduct);
+router.post("/add-product", isAuth, mongooseAdminController.addProduct);
 
-router.get("/edit-product/:id",mongooseAdminController.editProduct);
+router.get("/edit-product/:id", isAuth, mongooseAdminController.editProduct);
 
-router.post("/edit-product",mongooseAdminController.updateProduct);
+router.post("/edit-product", isAuth, mongooseAdminController.updateProduct);
 
-router.get("/products",mongooseAdminController.getProducts);
+router.get("/products", mongooseAdminController.getProducts);
 
-router.post("/delete-product",mongooseAdminController.deleteProduct);
+router.post("/delete-product", isAuth, mongooseAdminController.deleteProduct);
 
 module.exports.router = router;

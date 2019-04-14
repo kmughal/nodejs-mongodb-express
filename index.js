@@ -67,21 +67,21 @@ app.set("view engine", "ejs");
 const mongoose = require("mongoose");
 const { UserModel } = require("./models/mongoose/user");
 
-app.use(async (req, res, next) => {
-	if(!req.session.user) return next();
-	let user = await UserModel.findById(req.session.user._id);
-	if (!user) {
-		user = new UserModel({
-			password: "123",
-			email: "test@gmail.com",
-			cart: { items: [] }
-		});
-		user.save();
-	}
+// app.use(async (req, res, next) => {
+// 	if(!req.session.user) return next();
+// 	let user = await UserModel.findById(req.session.user._id);
+// 	if (!user) {
+// 		user = new UserModel({
+// 			password: "123",
+// 			email: "test@gmail.com",
+// 			cart: { items: [] }
+// 		});
+// 		user.save();
+// 	}
 
-	req.user = user;
-	return next();
-});
+// 	req.user = user;
+// 	return next();
+// });
 const adminRoutes = require("./routers/admin");
 const shopRoutes = require("./routers/shop");
 const { get404 } = require("./controllers/not-found");
