@@ -9,7 +9,7 @@ const mongoosedbShopController = {
 			res.render("shop/index", {
 				title: "Index",
 				path: "index",
-				isAuthenticated: cookieHelper.isAuthenticated(req)
+				isAuthenticated: req.session.isAuthenticated
 			});
 		} catch (e) {
 			throw new Error("Failed:Index , Error :", e);
@@ -23,7 +23,7 @@ const mongoosedbShopController = {
 				title: "Products",
 				path: "products",
 				products,
-				isAuthenticated: cookieHelper.isAuthenticated(req)
+				isAuthenticated: req.session.isAuthenticated
 			});
 		} catch (e) {
 			throw new Error("Failed:Shop.Product , Error :", e);
@@ -38,7 +38,7 @@ const mongoosedbShopController = {
 				title: product.title,
 				path: "product-detail",
 				product,
-				isAuthenticated: cookieHelper.isAuthenticated(req)
+				isAuthenticated: req.session.isAuthenticated
 			});
 		} catch (e) {
 			throw new Error("Failed:Shop.Product , Error :", e);
@@ -53,7 +53,7 @@ const mongoosedbShopController = {
 				title: "Product item added successfully!",
 				path: "cart",
 				cart,
-				isAuthenticated: cookieHelper.isAuthenticated(req)
+				isAuthenticated: req.session.isAuthenticated
 			});
 		} catch (e) {
 			throw new Error("Failed:Cart , Error :", e);
@@ -68,7 +68,7 @@ const mongoosedbShopController = {
 			res.render("shop/product-added-to-cart", {
 				title: "Product item added successfully!",
 				path: "cart",
-				isAuthenticated: cookieHelper.isAuthenticated(req)
+				isAuthenticated: req.session.isAuthenticated
 			});
 		} catch (e) {
 			throw new Error("Failed:Cart , Error :", e);
@@ -90,7 +90,7 @@ const mongoosedbShopController = {
 				title: "Orders",
 				path: "orders",
 				data,
-				isAuthenticated: cookieHelper.isAuthenticated(req)
+				isAuthenticated: req.session.isAuthenticated
 			});
 		} catch (e) {
 			throw new Error("Failed:Orders , Error :", e);
@@ -101,7 +101,7 @@ const mongoosedbShopController = {
 			res.render("shop/checkout", {
 				title: "Checkout",
 				path: "cart",
-				isAuthenticated: cookieHelper.isAuthenticated(req)
+				isAuthenticated: req.session.isAuthenticated
 			});
 		} catch (e) {
 			throw new Error("Failed:Checkout , Error :", e);
@@ -117,7 +117,7 @@ const mongoosedbShopController = {
 				productExists: products.length > 0,
 				activeShop: true,
 				activeAddProduct: false,
-				isAuthenticated: cookieHelper.isAuthenticated(req)
+				isAuthenticated: req.session.isAuthenticated
 			});
 		} catch (e) {
 			throw new Error("Fail to get products.");

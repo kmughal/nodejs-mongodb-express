@@ -6,6 +6,6 @@ exports.get404 =
   //res.status(404).sendFile(notFoundFilePath)
   res.status(404).render("404", {
     title: "Page not found" , path : "",
-    isAuthenticated: cookieHelper.isAuthenticated(req)
+    isAuthenticated: req.session.isAuthenticated
   })
 };

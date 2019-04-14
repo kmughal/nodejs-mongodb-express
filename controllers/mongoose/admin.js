@@ -8,7 +8,7 @@ class mongooseAdminController {
 			path: "add-product",
 			activeShop: false,
 			activeAddProduct: true,
-			isAuthenticated: cookieHelper.isAuthenticated(req)
+			isAuthenticated: req.session.isAuthenticated
 		};
 		res.render("admin/add-product", vm);
 	}
@@ -39,7 +39,7 @@ class mongooseAdminController {
 					path: "edit-product",
 					title: `Edit - ${product.title}`,
 					product,
-					isAuthenticated : cookieHelper.isAuthenticated(req)
+					isAuthenticated : req.session.isAuthenticated
 				});
 			} else return res.render("/admin/edit-product");
 		} catch (e) {
@@ -54,7 +54,7 @@ class mongooseAdminController {
 			title: "Admin Products",
 			path: "admin-product",
 			products,
-			isAuthenticated : cookieHelper.isAuthenticated(req)
+			isAuthenticated : req.session.isAuthenticated
 		});
 	}
 
