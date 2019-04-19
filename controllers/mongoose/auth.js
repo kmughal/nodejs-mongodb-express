@@ -2,9 +2,9 @@ const { cookieHelper } = require("../../common/cookie-helper");
 const { UserModel } = require("../../models/mongoose/user");
 const { passwordHelpers } = require("../../common/password-hashing");
 const crypto = require("crypto");
+const { validationResult } = require("express-validator/check");
 const { sendEmail } = require("../../common/send-email");
-const {toObjectId} = require("../../infrastructure/mongodb");
-
+const { toObjectId } = require("../../infrastructure/mongodb");
 
 exports.AuthController = class AuthController {
 	index(req, res, next) {
@@ -14,25 +14,61 @@ exports.AuthController = class AuthController {
 		const vm = {
 			path: "auth",
 			title: "Sign in",
-			errorMessages
+			errorMessages,
+			oldValues : {
+				email : '' , password : ''
+			},
+			validationErrors : []
 		};
 		res.render("auth/signin", vm);
 	}
 
 	async signin(req, res, next) {
+		const errors = validationResult(req);
 		const { email, password } = req.body;
+		if (!errors.isEmpty()) {
+			console.log(JSON.stringify(errors.array()));
+			return res.status(422).render("auth/signin", {
+				path: "auth",
+				title: "Sign in",
+				errorMessages: errors.array().map(e => e.msg),
+				oldValues: {
+					email,
+					password
+				},
+				validationErrors: errors.array()
+			});
+		}
+
 		const user = await UserModel.findOne({ email });
 		if (!user) {
-			req.flash("error", "Invalid account information.");
-			return res.redirect("/auth/signin");
+			
+			return res.status(422).render("auth/signin", {
+				path: "auth",
+				title: "Sign in",
+				errorMessages: ["Invalid account information."],
+				oldValues: {
+					email,
+					password
+				},
+				validationErrors: [{ param: "email" }, { param: "password" }]
+			});
 		}
 		const validatePassword = await passwordHelpers.decrypt(
 			password,
 			user.password
 		);
 		if (!validatePassword) {
-			req.flash("error", "Invalid account information.");
-			return res.redirect("/auth/signin");
+			return res.status(422).render("auth/signin", {
+				path: "auth",
+				title: "Sign in",
+				errorMessages: ["Invalid account information."],
+				oldValues: {
+					email,
+					password
+				},
+				validationErrors: [{ param: "email" }, { param: "password" }]
+			});
 		}
 
 		req.user = user;
@@ -62,22 +98,36 @@ exports.AuthController = class AuthController {
 			path: "signup",
 			title: "Sign up",
 			isAuthenticated: false,
-			errorMessages
+			errorMessages,
+			oldValues: {
+				email: "",
+				password: "",
+				confirmPassword: ""
+			},
+			validationErrors: []
 		};
 		res.render("auth/signup", vm);
 	}
 
 	async postSignup(req, res, next) {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(422).render("auth/signup", {
+				path: "signup",
+				title: "Sign up",
+				isAuthenticated: false,
+				errorMessages: errors.array().map(e => e.msg),
+				oldValues: {
+					email: req.body.email,
+					password: req.body.password,
+					confirmPassword: req.body.confirmPassword
+				},
+				validationErrors: errors.array()
+			});
+		}
+
 		const { email, password, confirmPassword } = req.body;
-		const userDetails = await UserModel.findOne({ email: email });
-		if (userDetails) {
-			req.flash("error", "account already exists!");
-			return res.redirect("/auth/signup");
-		}
-		if (password !== confirmPassword) {
-			req.flash("error", "Password doesn't matches with confirm password!");
-			return res.redirect("/auth/signup");
-		}
+
 		const hashedPassword = await passwordHelpers.encrypt(password);
 		const newUser = new UserModel({
 			email: email,
@@ -139,19 +189,19 @@ exports.AuthController = class AuthController {
 			resetToken: token,
 			resetTokenExpiration: { $gt: Date.now() }
 		});
-		console.log("user req" , user)
+		console.log("user req", user);
 		if (typeof user === undefined) {
 			req.flash("error", "user not found");
 			return res.redirect("/auth/reset");
 		}
-		console.log("route:/auth/new-password/" ,user._id.toString(), "/",token)
+		console.log("route:/auth/new-password/", user._id.toString(), "/", token);
 
 		res.render("auth/new-password", {
 			userId: user._id.toString(),
 			passwordToken: token,
 			path: "NewPassword",
 			title: "New Password",
-			errorMessages : []
+			errorMessages: []
 		});
 	}
 
@@ -162,7 +212,7 @@ exports.AuthController = class AuthController {
 			resetTokenExpiration: { $gt: Date.now() },
 			_id: toObjectId(userId)
 		});
-	
+
 		if (!user) {
 			req.flash("error", "user not found!");
 			return res.redirect("/auth/reset");
@@ -173,11 +223,18 @@ exports.AuthController = class AuthController {
 		user.resetToken = null;
 		user.resetTokenExpiration = null;
 		await user.save();
-		await sendEmail("Password changed successfully" ,`
-			<p> Dear ${user.email} , your password has been changed please click <a href='http://localhost:3000/auth/signin'> here </a> to sign in.</p>
+		await sendEmail(
+			"Password changed successfully",
+			`
+			<p> Dear ${
+				user.email
+			} , your password has been changed please click <a href='http://localhost:3000/auth/signin'> here </a> to sign in.</p>
 			<p> Regards , </p>
 			<h2>Mongo course team!</h2>
-		`,'kmughal@gmail.com' , 'kmughal@gmail.com');
+		`,
+			"kmughal@gmail.com",
+			"kmughal@gmail.com"
+		);
 		res.redirect("/auth/signin");
 	}
 };
