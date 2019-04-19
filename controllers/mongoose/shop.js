@@ -15,7 +15,7 @@ const mongoosedbShopController = {
 		}
 	},
 	async getProducts(req, res, next) {
-		const products = await ProductModel.find().populate("product");
+		const products = await ProductModel.find({userId : req.user._id}).populate("product");
 		products.map(p => (p.id = p._id));
 		try {
 			res.render("shop/shop-list", {
