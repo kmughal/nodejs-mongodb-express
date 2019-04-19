@@ -1,5 +1,6 @@
 const { ProductModel } = require("../../models/mongoose/product");
 const { cookieHelper } = require("../../common/cookie-helper");
+const { validationResult } = require("express-validator/check");
 
 class mongooseAdminController {
 	static initProduct(req, res, next) {
@@ -7,7 +8,10 @@ class mongooseAdminController {
 			title: "Add new Product",
 			path: "add-product",
 			activeShop: false,
-			activeAddProduct: true
+			activeAddProduct: true,
+			oldValues: { title: "", description: "", imageUrl: "", price: 0.0 },
+			validationErrors: [],
+			errorMessages: []
 		};
 		res.render("admin/add-product", vm);
 	}
@@ -15,6 +19,18 @@ class mongooseAdminController {
 	static async addProduct(req, res, next) {
 		const { title, description, imageUrl, price } = req.body;
 
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			res.status(422).render("admin/add-product", {
+				title: "Add new Product",
+				path: "add-product",
+				activeShop: false,
+				activeAddProduct: true,
+				oldValues: { title, description, imageUrl, price },
+				validationErrors: errors.array(),
+				errorMessages: errors.array().map(e => e.msg)
+			});
+		}
 		const product = new ProductModel({
 			title,
 			description,
@@ -57,8 +73,11 @@ class mongooseAdminController {
 
 	static async updateProduct(req, res, next) {
 		const { id, title, description, price, imageUrl } = req.body;
-		const product = await ProductModel.findOne({ _id: id, userId: req.user._id });
-		if (!product) return res.status(405).send("Not allowed to update product")
+		const product = await ProductModel.findOne({
+			_id: id,
+			userId: req.user._id
+		});
+		if (!product) return res.status(405).send("Not allowed to update product");
 		product.title = title;
 		product.description = description;
 		product.price = price;
@@ -72,10 +91,14 @@ class mongooseAdminController {
 		try {
 			const { id } = req.body;
 			//const result = await ProductModel.findByIdAndRemove(id);
-			const product = await ProductModel.findOne({ _id: id, userId: req.user._id });
-			if (!product) return res.status(405).send("Not allowed to delete product");
+			const product = await ProductModel.findOne({
+				_id: id,
+				userId: req.user._id
+			});
+			if (!product)
+				return res.status(405).send("Not allowed to delete product");
 			await product.destroy();
-			
+
 			res.redirect("/admin/products");
 		} catch (e) {
 			throw new Error("Shop.deleteProduct failed,Error:", e);

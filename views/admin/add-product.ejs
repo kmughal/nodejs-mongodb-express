@@ -2,22 +2,47 @@
 <%- include('../includes/nav.ejs') %>
 <main>
   <h1>Add new product</h1>
+   
+    <% errorMessages.forEach(message => {%> 
+      <p class="alert alert--danger"><%=message%></p>   
+       <%})%>
   <form action='/admin/add-product' method='POST'>
     <div class="form-control">
       <label for="title">Product name:</label>
-      <input type='text' name='title' id='title' />
+      <input 
+      class="<%= validationErrors.find(e => e.param ==='title') ? 'invalid' : '' %>"
+      value = "<%= oldValues.title %>"
+      type='text' 
+      name='title' 
+      id='title' />
     </div>
     <div class="form-control">
       <label for="description">Description:</label>
-      <input type='text' name='description' id='description' />
+      <input 
+      class="<%= validationErrors.find(e => e.param ==='description') ? 'invalid' : '' %>"
+      value = "<%= oldValues.description %>"
+      type='text' 
+      name='description' 
+      id='description' />
     </div>
     <div class="form-control">
       <label for="price">Price:</label>
-      <input type='number' name='price' id='price' step="0.01"/>
+      <input 
+      class="<%= validationErrors.find(e => e.param ==='price') ? 'invalid' : '' %>"
+      value = "<%= oldValues.price %>"
+      type='number' 
+      name='price' 
+      id='price' 
+      step="0.01"/>
     </div>
     <div class="form-control">
       <label for="imageUrl">Image Url</label>
-      <input type='text' name='imageUrl' id='imageUrl' />
+      <input 
+      class="<%= validationErrors.find(e => e.param ==='imageUrl') ? 'invalid' : '' %>"
+      value = "<%= oldValues.imageUrl %>"
+      type='text' 
+      name='imageUrl' 
+      id='imageUrl' />
     </div>
     <div class="form-control">
       <button>Save</button>
