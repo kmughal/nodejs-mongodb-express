@@ -35,10 +35,33 @@ const router = express.Router();
 
 const { mongooseAdminController } = require("../controllers/mongoose/admin");
 const { isAuth } = require("../middlewares/is-auth");
+const { body } = require("express-validator/check");
 
 router.get("/add-product", isAuth, mongooseAdminController.initProduct);
 
-router.post("/add-product", isAuth, mongooseAdminController.addProduct);
+router.post(
+	"/add-product",
+	[
+		body("title")
+			.isLength({ min: 3 })
+			.isAlphanumeric()
+			.trim()
+			.withMessage("Title is not valid"),
+		body("price")
+			.isNumeric()
+			.withMessage("Provided price is not valid"),
+		body("imageUrl")
+			.isURL()
+			.trim()
+			.withMessage("Provided url is not valid"),
+		body("description")
+			.isLength({ min: 10 })
+			.trim()
+			.withMessage("Provided description is not valid")
+	],
+	isAuth,
+	mongooseAdminController.addProduct
+);
 
 router.get("/edit-product/:id", isAuth, mongooseAdminController.editProduct);
 
