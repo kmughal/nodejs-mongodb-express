@@ -13,8 +13,8 @@
       
       <ul class="main-header__item-list">
         <% if (!isAuthenticated) {%> 
-          <li class="main-header__item <%= path ==='login' ? 'active' : ''%>">
-              <a href="/auth/signin">Login </a>
+          <li class="main-header__item <%= path ==='auth' ? 'active' : ''%>">
+              <a href="/auth/signin">Sigin </a>
             </li>  
             <li class="main-header__item <%= path ==='siginup' ? 'active' : ''%>">
                 <a href="/auth/signup">Signup </a>
