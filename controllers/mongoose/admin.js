@@ -46,7 +46,7 @@ class mongooseAdminController {
 	}
 
 	static async getProducts(req, res, next) {
-		const products = await ProductModel.find();
+		const products = await ProductModel.find({ userId: req.user._id });
 		products.map(prod => (prod.id = prod._id));
 		res.render("admin/product-list", {
 			title: "Admin Products",
@@ -57,7 +57,8 @@ class mongooseAdminController {
 
 	static async updateProduct(req, res, next) {
 		const { id, title, description, price, imageUrl } = req.body;
-		const product = await ProductModel.findById(id);
+		const product = await ProductModel.findOne({ _id: id, userId: req.user._id });
+		if (!product) return res.status(405).send("Not allowed to update product")
 		product.title = title;
 		product.description = description;
 		product.price = price;
@@ -70,8 +71,11 @@ class mongooseAdminController {
 	static async deleteProduct(req, res, next) {
 		try {
 			const { id } = req.body;
-			const result = await ProductModel.findByIdAndRemove(id);
-			if (!result) throw new Error("Fail to delete the product");
+			//const result = await ProductModel.findByIdAndRemove(id);
+			const product = await ProductModel.findOne({ _id: id, userId: req.user._id });
+			if (!product) return res.status(405).send("Not allowed to delete product");
+			await product.destroy();
+			
 			res.redirect("/admin/products");
 		} catch (e) {
 			throw new Error("Shop.deleteProduct failed,Error:", e);
