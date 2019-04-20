@@ -18,8 +18,9 @@ const csurf = require("csurf");
 const multer = require("multer");
 
 const {
-	fileStorageSettings
-} = require("./infrastructure/file-storage-settings");
+	fileStorageSettings,
+	fileFilterTypes
+} = require("./infrastructure/file-settings");
 
 // Orms
 // const {
@@ -47,7 +48,9 @@ app.use(
 	bodyParser.urlencoded({
 		extended: false
 	}),
-	multer({ storage: fileStorageSettings }).single("image"),
+	multer({ storage: fileStorageSettings, fileFilter: fileFilterTypes }).single(
+		"image"
+	),
 	bodyParser.json(),
 	express.static(path.resolve(__dirname, "public")),
 	session({
