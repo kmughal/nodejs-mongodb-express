@@ -115,7 +115,10 @@ app.use("/500" , get500);
 app.use(get404);
 
 app.use((error,req,res,next)=> {
-	res.redirect("/500");
+	res.status("/500").render("/500" , {
+		path : "Something is not right" ,
+		title : "Something went wrong!"
+	})
 })
 
 //ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'
