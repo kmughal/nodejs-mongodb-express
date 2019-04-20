@@ -5,7 +5,6 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const flash = require("connect-flash");
 
-
 session({
 	secret: "foo bar",
 	resave: false /* dont save session for every request only if something is changed then do so*/,
@@ -48,7 +47,7 @@ app.use(
 		secret: "foo bar",
 		resave: false /* dont save session for every request only if something is changed then do so*/,
 		saveUninitialized: false,
-		store:store
+		store: store
 	}),
 	protectionToken,
 	flash()
@@ -74,39 +73,50 @@ const mongoose = require("mongoose");
 const { UserModel } = require("./models/mongoose/user");
 
 app.use(async (req, res, next) => {
-	if(!req.session.user) return next();
-	let user = await UserModel.findById(req.session.user._id);
-	
-	if (!user) {
-		user = new UserModel({
-			password: "123",
-			email: "test@gmail.com",
-			cart: { items: [] }
-		});
-		user.save();
-	}
+	if (!req.session.user) return next();
+	try {
+		let user = await UserModel.findById(req.session.user._id);
 
-	req.user = user;
-	req.u = user;
-	return next();
+		if (!user) {
+			// user = new UserModel({
+			// 	password: "123",
+			// 	email: "test@gmail.com",
+			// 	cart: { items: [] }
+			// });
+			// user.save();
+			return next();
+		}
+
+		req.user = user;
+		req.u = user;
+		return next();
+	} catch (e) {
+		throw e;
+	}
 });
 
 // Add locals
-app.use((req,res,next) => {
+app.use((req, res, next) => {
 	res.locals.isAuthenticated = req.session.isAuthenticated;
 	res.locals.csrfToken = req.csrfToken();
 	next();
-})
+});
 
 const adminRoutes = require("./routers/admin");
 const shopRoutes = require("./routers/shop");
 const { get404 } = require("./controllers/not-found");
+const { get500 } = require("./controllers/500");
 const { authRoutes } = require("./routers/auth");
 
 app.use("/admin", adminRoutes.router);
 app.use("/shop", shopRoutes);
 app.use("/auth", authRoutes);
+app.use("/500" , get500);
 app.use(get404);
+
+app.use((error,req,res,next)=> {
+	res.redirect("/500");
+})
 
 //ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'
 
