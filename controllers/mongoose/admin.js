@@ -53,7 +53,9 @@ class mongooseAdminController {
 				return res.render("product/edit-product", {
 					path: "edit-product",
 					title: `Edit - ${product.title}`,
-					product
+					product,
+					validationErrors: [],
+					errorMessages: []
 				});
 			} else return res.render("/admin/edit-product");
 		} catch (e) {
@@ -72,7 +74,20 @@ class mongooseAdminController {
 	}
 
 	static async updateProduct(req, res, next) {
+		const errors = validationResult(req);
 		const { id, title, description, price, imageUrl } = req.body;
+		const oldValues = { product: { id, title, description, imageUrl, price } };
+		console.log(oldValues);
+		if (!errors.isEmpty()) {
+			return res.status(422).render("product/edit-product", {
+				path: "edit-product",
+				title: `Edit - ${title}`,
+				...oldValues,
+				validationErrors: errors.array(),
+				errorMessages: errors.array().map(e => e.msg)
+			});
+		}
+
 		const product = await ProductModel.findOne({
 			_id: id,
 			userId: req.user._id
