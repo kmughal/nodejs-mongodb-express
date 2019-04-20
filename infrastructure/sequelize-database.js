@@ -2,9 +2,12 @@ const {
   Sequelize
 } = require("sequelize");
 
-const instance = new Sequelize("node-db", "root", "Allah1234", {
+const { getSettings } = require("../common/setting-helper");
+const mySqlSettings = getSettings("my-sql");
+
+const instance = new Sequelize(mySqlSettings.database, mySqlSettings.user, mySqlSettings.password, {
   dialect: "mysql",
-  host: "localhost"
+  host: mySqlSettings.host
 });
 
 module.exports.sequelize = instance;
