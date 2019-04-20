@@ -48,7 +48,7 @@ class mongooseAdminController {
 
 		try {
 			const product = await ProductModel.findById(id).populate("userId");
-			console.log(product);
+		
 			if (product) {
 				return res.render("product/edit-product", {
 					path: "edit-product",
@@ -77,7 +77,7 @@ class mongooseAdminController {
 		const errors = validationResult(req);
 		const { id, title, description, price, imageUrl } = req.body;
 		const oldValues = { product: { id, title, description, imageUrl, price } };
-		console.log(oldValues);
+	
 		if (!errors.isEmpty()) {
 			return res.status(422).render("product/edit-product", {
 				path: "edit-product",

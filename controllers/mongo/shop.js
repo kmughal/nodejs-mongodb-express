@@ -39,7 +39,6 @@ const mongodbShopController = {
 	getCart(req, res, next) {
 		try {
 			const cart = req.user.getCart();
-			console.log("cart:" , cart);
 			res.render("shop/cart", {
 				title: "Product item added successfully!",
 				path: "cart",

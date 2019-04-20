@@ -44,7 +44,6 @@ const shopSequelizerController = {
 
 		try {
 			const cart = await req.user.getCart();
-			console.log("cart", cart);
 			const products = await cart.getProducts();
 
 			res.render("shop/cart", {

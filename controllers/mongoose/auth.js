@@ -10,7 +10,6 @@ exports.AuthController = class AuthController {
 	index(req, res, next) {
 		//const isAuthenticated = req.session.isAuthenticated;
 		const errorMessages = req.flash("error");
-		console.log("error:", errorMessages);
 		const vm = {
 			path: "auth",
 			title: "Sign in",
@@ -27,7 +26,6 @@ exports.AuthController = class AuthController {
 		const errors = validationResult(req);
 		const { email, password } = req.body;
 		if (!errors.isEmpty()) {
-			console.log(JSON.stringify(errors.array()));
 			return res.status(422).render("auth/signin", {
 				path: "auth",
 				title: "Sign in",
@@ -76,7 +74,6 @@ exports.AuthController = class AuthController {
 		req.session.isAuthenticated = true;
 		req.session.user = req.user;
 		await req.session.save();
-		console.log("send email");
 		await sendEmail(
 			"You are signed in",
 			"Just to let you know that you logged in",
@@ -189,12 +186,12 @@ exports.AuthController = class AuthController {
 			resetToken: token,
 			resetTokenExpiration: { $gt: Date.now() }
 		});
-		console.log("user req", user);
+	
 		if (typeof user === undefined) {
 			req.flash("error", "user not found");
 			return res.redirect("/auth/reset");
 		}
-		console.log("route:/auth/new-password/", user._id.toString(), "/", token);
+	
 
 		res.render("auth/new-password", {
 			userId: user._id.toString(),

@@ -44,14 +44,13 @@ const mongoosedbShopController = {
 	},
 	async getCart(req, res, next) {
 		try {
-			console.log("getcart")
+		
 			const { cart } = await req.user
 				.populate("cart.items.productId")
 				.execPopulate();
 		 //const cart = {items : []}
 			// const cart = {items : []};
-			 console.log("cart:",cart)
-			 console.log("going to call middleware")
+		
 			res.render("shop/cart", {
 				title: "Product item added successfully!",
 				path: "cart",

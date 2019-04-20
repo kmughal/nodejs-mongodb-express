@@ -24,7 +24,7 @@ exports.Product = class Product {
 				})
 				.then(v => console.log(v))
 				.catch(e => console.log("e:", e));
-			console.log(collection);
+		
 		} catch (e) {
 			console.log(e);
 			throw e;
