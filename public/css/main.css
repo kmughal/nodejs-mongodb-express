@@ -220,3 +220,7 @@ h1.main-heading {
 .centered {
 	text-align: center;
 }
+
+.invalid {
+	border:1px solid red!important;
+}

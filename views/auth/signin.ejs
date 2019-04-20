@@ -3,18 +3,29 @@
 
 <%- include('../includes/nav.ejs') %>
 <main>
-<h1 class="main-heading">auth Window</h1>
+<h1 class="main-heading">Sign in</h1>
 <% errorMessages.forEach(message => {%> 
     <p class="alert alert--danger"><%=message%></p>   
      <%})%>
 <form action="/auth/signin/" method="POST">
   <div class="form-control">
       <label for="email">Email Address</label>
-      <input  type="text" name="email" id="email">
+      <input 
+      class="<%= validationErrors.find( e=> e.param === 'email') ? 'invalid' : '' %>"
+      type="text" 
+      name="email" 
+      value="<%= oldValues.email%>"
+      id="email"
+      >
   </div>
   <div class="form-control">
       <label for="password">Password</label>
-      <input type="password" name="password" id="password">
+      <input 
+      class="<%= validationErrors.find( e=> e.param === 'password') ? 'invalid' : '' %>"
+      type="password" 
+      name="password" 
+      value="<%= oldValues.password%>"
+      id="password">
   </div>
   <div class="form-control">
       <input type="submit" value="Sign in">
