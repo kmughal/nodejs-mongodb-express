@@ -41,7 +41,7 @@ router.get("/add-product", isAuth, mongooseAdminController.initProduct);
 const productValidator = [
 	body("title")
 		.isLength({ min: 3 })
-		.isAlphanumeric()
+		//.isAlphanumeric()
 		.trim()
 		.withMessage("Title is not valid"),
 	body("price")
