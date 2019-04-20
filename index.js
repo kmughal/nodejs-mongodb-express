@@ -15,6 +15,12 @@ const { dbUrl } = require("./infrastructure/mongodb");
 const store = new MongoDbSessionStore({ uri: dbUrl, collection: "sessions" });
 const app = express();
 const csurf = require("csurf");
+const multer = require("multer");
+
+const {
+	fileStorageSettings
+} = require("./infrastructure/file-storage-settings");
+
 // Orms
 // const {
 //   UserModel
@@ -41,6 +47,7 @@ app.use(
 	bodyParser.urlencoded({
 		extended: false
 	}),
+	multer({ storage: fileStorageSettings }).single("image"),
 	bodyParser.json(),
 	express.static(path.resolve(__dirname, "public")),
 	session({
@@ -72,13 +79,13 @@ app.set("view engine", "ejs");
 const mongoose = require("mongoose");
 const { UserModel } = require("./models/mongoose/user");
 
-app.use((error,req,res,next)=> {
-	res.status("/500").render("/500" , {
-		path : "Something is not right" ,
-		title : "Something went wrong!",
+app.use((error, req, res, next) => {
+	res.status("/500").render("/500", {
+		path: "Something is not right",
+		title: "Something went wrong!",
 		isAuthenticated: req.session.isAuthenticated
-	})
-})
+	});
+});
 
 app.use(async (req, res, next) => {
 	if (!req.session.user) return next();
@@ -119,10 +126,8 @@ const { authRoutes } = require("./routers/auth");
 app.use("/admin", adminRoutes.router);
 app.use("/shop", shopRoutes);
 app.use("/auth", authRoutes);
-app.use("/500" , get500);
+app.use("/500", get500);
 app.use(get404);
-
-
 
 //ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'
 
