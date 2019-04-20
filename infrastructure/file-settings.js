@@ -7,3 +7,10 @@ exports.fileStorageSettings = multer.diskStorage({
 		cb(null, file.originalname);
 	}
 });
+
+
+exports.fileFilterTypes = (req,file,cb) => {
+	const acceptableMimeTypes = ["image/png" , "image/jpeg" , "images/jpg"];
+	if (acceptableMimeTypes.includes(file.mimetype))  cb(null,true);
+	else cb(null,false);
+}
