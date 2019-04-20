@@ -47,10 +47,10 @@ const productValidator = [
 	body("price")
 		.isNumeric()
 		.withMessage("Provided price is not valid"),
-	body("imageUrl")
-		.isURL()
-		.trim()
-		.withMessage("Provided url is not valid"),
+	// body("imageUrl")
+	// 	.isURL()
+	// 	.trim()
+	// 	.withMessage("Provided url is not valid"),
 	body("description")
 		.isLength({ min: 10 })
 		.trim()
