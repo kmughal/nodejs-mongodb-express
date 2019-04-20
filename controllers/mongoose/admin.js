@@ -17,8 +17,9 @@ class mongooseAdminController {
 	}
 
 	static async addProduct(req, res, next) {
-		const { title, description, imageUrl, price } = req.body;
-
+		const { title, description, price } = req.body;
+		const imageUrl = req.file.path;
+		
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			res.status(422).render("admin/add-product", {
