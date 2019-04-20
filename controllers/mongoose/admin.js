@@ -18,6 +18,18 @@ class mongooseAdminController {
 
 	static async addProduct(req, res, next) {
 		const { title, description, price } = req.body;
+
+		if (!req.file) {
+			es.status(422).render("admin/add-product", {
+				title: "Add new Product",
+				path: "add-product",
+				activeShop: false,
+				activeAddProduct: true,
+				oldValues: { title, description, price },
+				validationErrors: ["Fail to upload file"],
+				errorMessages: []
+			});
+		}
 		const imageUrl = req.file.path;
 		
 		const errors = validationResult(req);
