@@ -59,7 +59,10 @@ class mongooseAdminController {
 				});
 			} else return res.render("/admin/edit-product");
 		} catch (e) {
-			throw new Error("Fail to save product");
+		 console.log("Shop.SaveProduct failed,Error:", e)
+			const error = new Error("Shop.SaveProduct failed,Error:", e);
+			error.httpStatusCode = 500;
+			next(error);
 		}
 	}
 
@@ -116,7 +119,10 @@ class mongooseAdminController {
 
 			res.redirect("/admin/products");
 		} catch (e) {
-			throw new Error("Shop.deleteProduct failed,Error:", e);
+			console.log("Shop.deleteProduct failed,Error:", e);
+			const error = new Error("Shop.deleteProduct failed,Error:", e);
+			error.httpStatusCode = 500;
+			next(error);
 		}
 	}
 }
