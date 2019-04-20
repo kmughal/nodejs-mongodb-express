@@ -63,6 +63,8 @@ app.use(
 	flash()
 );
 
+app.use("/images",express.static(path.resolve(__dirname, "images")))
+
 //const { User } = require("./models/mongodb/user");
 // app.use(codeToRmove);
 // async function codeToRmove(req, res, next) {
