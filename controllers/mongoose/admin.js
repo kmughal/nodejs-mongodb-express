@@ -1,7 +1,7 @@
 const { ProductModel } = require("../../models/mongoose/product");
 const { cookieHelper } = require("../../common/cookie-helper");
 const { validationResult } = require("express-validator/check");
-const { getInvoiceStream } = require("../../common/invoice-helpers");
+const { generateInvoice } = require("../../common/invoice-helpers");
 const { OrderModel } = require("../../models/mongoose/order");
 
 class mongooseAdminController {
@@ -159,7 +159,7 @@ class mongooseAdminController {
 		const userId = req.user._id;
 		const { orderId } = req.params;
 		const orderRecord = await OrderModel.findById(orderId);
-		if (!orderRecord)  {
+		if (!orderRecord) {
 			const customError = new Error("No order found!");
 			customError.httpStatusCode = 500;
 			return next(customError);
@@ -170,10 +170,20 @@ class mongooseAdminController {
 			customError.httpStatusCode = 500;
 			return next(customError);
 		}
-	
-		const filename = `invoice-${orderId}.pdf`;
-		const stream = await getInvoiceStream(filename);
-		stream.pipe(res);
+
+		const generateInvoiceParams = {
+			orderId,
+			products: orderRecord.products.map(item => {
+				return {
+					title: item.product.title,
+					price: item.product.price,
+					quantity: item.quantity
+				};
+			})
+		};
+
+		console.log(JSON.stringify(generateInvoiceParams));
+		generateInvoice(generateInvoiceParams).pipe(res);
 	}
 }
 
