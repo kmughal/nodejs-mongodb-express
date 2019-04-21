@@ -1,8 +1,10 @@
+const path = require("path");
 const { ProductModel } = require("../../models/mongoose/product");
 const { cookieHelper } = require("../../common/cookie-helper");
 const { validationResult } = require("express-validator/check");
 const { generateInvoice } = require("../../common/invoice-helpers");
 const { OrderModel } = require("../../models/mongoose/order");
+const {deleteFile} = require("../../common/invoice-helpers");
 
 class mongooseAdminController {
 	static initProduct(req, res, next) {
@@ -142,9 +144,16 @@ class mongooseAdminController {
 			});
 			if (!product)
 				return res.status(405).send("Not allowed to delete product");
-			await await ProductModel.remove({
+			 await ProductModel.deleteOne({
 				_id: id
 			});
+
+			const imagePathToRemove = path.resolve(__dirname,"../../",product.imageUrl);
+			 deleteFile(imagePathToRemove).then(v=> v).catch(e=> {
+				 const customError = e;
+				 customError.httpStatusCode = 500;
+				 next(customError);
+			 })
 
 			res.redirect("/admin/products");
 		} catch (e) {
