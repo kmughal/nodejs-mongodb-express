@@ -84,13 +84,7 @@ app.set("view engine", "ejs");
 const mongoose = require("mongoose");
 const { UserModel } = require("./models/mongoose/user");
 
-app.use((error, req, res, next) => {
-	res.status("/500").render("/500", {
-		path: "Something is not right",
-		title: "Something went wrong!",
-		isAuthenticated: req.session.isAuthenticated
-	});
-});
+
 
 app.use(async (req, res, next) => {
 	if (!req.session.user) return next();
@@ -122,6 +116,9 @@ app.use((req, res, next) => {
 	next();
 });
 
+
+
+
 const adminRoutes = require("./routers/admin");
 const shopRoutes = require("./routers/shop");
 const { get404 } = require("./controllers/not-found");
@@ -134,6 +131,16 @@ app.use("/auth", authRoutes);
 app.use("/500", get500);
 app.get("/" , (req,res,next)=> res.redirect("auth/signin"));
 app.use(get404);
+
+
+app.use((error, req, res, next) => {
+	res.status(500).render("500", {
+		path: "Something is not right",
+		title: "Something went wrong!",
+		isAuthenticated: req.session.isAuthenticated,
+		errorMessage: error.message
+	});
+});
 
 //ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'
 
