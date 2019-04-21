@@ -5,7 +5,7 @@
   <% errorMessages.forEach(e => {%> 
     <p class="alert alert--danger"><%=e%></p>   
   <%})%>
-  <form action='/admin/edit-product' method='POST'>
+  <form action='/admin/edit-product' method='POST' enctype="multipart/form-data">
     <input type="hidden" name="id" id="id" value="<%=product.id%>">
     <div class="form-control">
       <label for="title">Product name:</label>
@@ -36,13 +36,11 @@
       value="<%=product.price%>"/>
     </div>
     <div class="form-control">
-      <label for="imageUrl">Image Url</label>
+      <label for="imageUrl">Image</label>
       <input 
-      class="<%= validationErrors.find(e => e.param ==='imageUrl') ? 'invalid' : ''%>"
-      type='text' 
+      type='image' 
       name='imageUrl' 
-      id='imageUrl' 
-      value="<%=product.imageUrl%>"/>
+      id='imageUrl' />
     </div>
     <div class="form-control">
       <button>Save</button>

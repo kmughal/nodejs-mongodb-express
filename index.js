@@ -15,6 +15,13 @@ const { dbUrl } = require("./infrastructure/mongodb");
 const store = new MongoDbSessionStore({ uri: dbUrl, collection: "sessions" });
 const app = express();
 const csurf = require("csurf");
+const multer = require("multer");
+
+const {
+	fileStorageSettings,
+	fileFilterTypes
+} = require("./infrastructure/file-settings");
+
 // Orms
 // const {
 //   UserModel
@@ -41,6 +48,9 @@ app.use(
 	bodyParser.urlencoded({
 		extended: false
 	}),
+	multer({ storage: fileStorageSettings, fileFilter: fileFilterTypes }).single(
+		"image"
+	),
 	bodyParser.json(),
 	express.static(path.resolve(__dirname, "public")),
 	session({
@@ -52,6 +62,8 @@ app.use(
 	protectionToken,
 	flash()
 );
+
+app.use("/images",express.static(path.resolve(__dirname, "images")))
 
 //const { User } = require("./models/mongodb/user");
 // app.use(codeToRmove);
@@ -72,13 +84,7 @@ app.set("view engine", "ejs");
 const mongoose = require("mongoose");
 const { UserModel } = require("./models/mongoose/user");
 
-app.use((error,req,res,next)=> {
-	res.status("/500").render("/500" , {
-		path : "Something is not right" ,
-		title : "Something went wrong!",
-		isAuthenticated: req.session.isAuthenticated
-	})
-})
+
 
 app.use(async (req, res, next) => {
 	if (!req.session.user) return next();
@@ -110,6 +116,9 @@ app.use((req, res, next) => {
 	next();
 });
 
+
+
+
 const adminRoutes = require("./routers/admin");
 const shopRoutes = require("./routers/shop");
 const { get404 } = require("./controllers/not-found");
@@ -119,10 +128,19 @@ const { authRoutes } = require("./routers/auth");
 app.use("/admin", adminRoutes.router);
 app.use("/shop", shopRoutes);
 app.use("/auth", authRoutes);
-app.use("/500" , get500);
+app.use("/500", get500);
+app.get("/" , (req,res,next)=> res.redirect("auth/signin"));
 app.use(get404);
 
 
+app.use((error, req, res, next) => {
+	res.status(500).render("500", {
+		path: "Something is not right",
+		title: "Something went wrong!",
+		isAuthenticated: req.session.isAuthenticated,
+		errorMessage: error.message
+	});
+});
 
 //ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'
 

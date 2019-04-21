@@ -41,16 +41,16 @@ router.get("/add-product", isAuth, mongooseAdminController.initProduct);
 const productValidator = [
 	body("title")
 		.isLength({ min: 3 })
-		.isAlphanumeric()
+		//.isAlphanumeric()
 		.trim()
 		.withMessage("Title is not valid"),
 	body("price")
 		.isNumeric()
 		.withMessage("Provided price is not valid"),
-	body("imageUrl")
-		.isURL()
-		.trim()
-		.withMessage("Provided url is not valid"),
+	// body("imageUrl")
+	// 	.isURL()
+	// 	.trim()
+	// 	.withMessage("Provided url is not valid"),
 	body("description")
 		.isLength({ min: 10 })
 		.trim()
@@ -75,5 +75,7 @@ router.post("/edit-product", 	productValidator,isAuth, mongooseAdminController.u
 router.get("/products", mongooseAdminController.getProducts);
 
 router.post("/delete-product", isAuth, mongooseAdminController.deleteProduct);
+
+router.get("/invoice/:orderId",isAuth, mongooseAdminController.getInvoice);
 
 module.exports.router = router;
