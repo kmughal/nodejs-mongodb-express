@@ -76,4 +76,6 @@ router.get("/products", mongooseAdminController.getProducts);
 
 router.post("/delete-product", isAuth, mongooseAdminController.deleteProduct);
 
+router.get("/invoice/:orderId",isAuth, mongooseAdminController.getInvoice);
+
 module.exports.router = router;
