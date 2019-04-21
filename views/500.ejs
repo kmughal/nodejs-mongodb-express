@@ -3,7 +3,10 @@
 
 <body>
   <%- include('includes/nav.ejs') %>
-  <h1>Some error occured!</h1>
+  <section class="alert alert--danger">
+      <h1>Some error occured!</h1>
+      <p><%=errorMessage%></p>
+  </section>
 </body>
 
 </html>
