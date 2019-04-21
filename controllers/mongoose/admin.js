@@ -1,6 +1,8 @@
 const { ProductModel } = require("../../models/mongoose/product");
 const { cookieHelper } = require("../../common/cookie-helper");
 const { validationResult } = require("express-validator/check");
+const { getInvoiceStream } = require("../../common/invoice-helpers");
+const { OrderModel } = require("../../models/mongoose/order");
 
 class mongooseAdminController {
 	static initProduct(req, res, next) {
@@ -143,7 +145,7 @@ class mongooseAdminController {
 			await await ProductModel.remove({
 				_id: id
 			});
-		
+
 			res.redirect("/admin/products");
 		} catch (e) {
 			console.log("Shop.deleteProduct failed,Error:", e);
@@ -151,6 +153,27 @@ class mongooseAdminController {
 			error.httpStatusCode = 500;
 			next(error);
 		}
+	}
+
+	static async getInvoice(req, res, next) {
+		const userId = req.user._id;
+		const { orderId } = req.params;
+		const orderRecord = await OrderModel.findById(orderId);
+		if (!orderRecord)  {
+			const customError = new Error("No order found!");
+			customError.httpStatusCode = 500;
+			return next(customError);
+		}
+		const orderUserId = String(orderRecord.user.userId);
+		if (String(orderUserId) != String(userId)) {
+			const customError = new Error("Not authroized to view this file");
+			customError.httpStatusCode = 500;
+			return next(customError);
+		}
+	
+		const filename = `invoice-${orderId}.pdf`;
+		const stream = await getInvoiceStream(filename);
+		stream.pipe(res);
 	}
 }
 
