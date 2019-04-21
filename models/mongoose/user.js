@@ -58,7 +58,7 @@ userSchema.methods.deleteProductFromCart = function(productId) {
 
 userSchema.methods.addToCart =  function(product) {
 	if (!this.cart) this.cart = { items: [] };
-
+	
 	const cartProductIndex = this.cart.items.findIndex(
 		p => p.productId.toString() === product._id.toString()
 	);
@@ -70,16 +70,17 @@ userSchema.methods.addToCart =  function(product) {
 			this.cart.items[cartProductIndex].quantity + 1;
 		updatedCart = this.cart;
 	} else {
+		const oldItems = this.cart.items || [];
 		updatedCart = {
 			items: [
+				...oldItems,
 				{
 					productId: product._id,
 					quantity
-				}
+				}, 
 			]
 		};
 	}
-
 	this.cart = updatedCart;
 	
 	return this.save();
