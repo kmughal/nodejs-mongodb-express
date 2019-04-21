@@ -143,7 +143,7 @@ class mongooseAdminController {
 			await await ProductModel.remove({
 				_id: id
 			});
-			console.log("ol");
+		
 			res.redirect("/admin/products");
 		} catch (e) {
 			console.log("Shop.deleteProduct failed,Error:", e);

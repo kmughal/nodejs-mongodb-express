@@ -132,6 +132,7 @@ app.use("/admin", adminRoutes.router);
 app.use("/shop", shopRoutes);
 app.use("/auth", authRoutes);
 app.use("/500", get500);
+app.get("/" , (req,res,next)=> res.redirect("auth/signin"));
 app.use(get404);
 
 //ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'
