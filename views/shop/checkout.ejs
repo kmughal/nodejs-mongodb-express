@@ -3,6 +3,28 @@
 
 <%- include('../includes/nav.ejs') %>
 <main>
- <h1>checkout</h1>
+  <h1>Shop page</h1>
+  <%if(products.length === 0 ) {%>
+  <p>No product found</p>
+  <%} else {%>
+  <div >
+    <%for(const product of products) {%>
+    <section class="order-list-item">
+      <h1>
+        <%= product.productId.title%>
+      </h1>
+     
+      <p>
+        <h2> Unit Price
+          £ <%= product.productId.price%>
+        </h2>
+        <h2>Total <%=totalPrice %></h2>
+      </p>
+    
+    </section>
+    <%}%>
+     
+      </div>
+    <%}%>
 </main>
 <%- include('../includes/end.ejs') %>

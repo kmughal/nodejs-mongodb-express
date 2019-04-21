@@ -73,7 +73,7 @@ router.get("/cart", isAuth, mongoosedbShopController.getCart);
 
 router.post("/cart", isAuth, mongoosedbShopController.addCart);
 
-router.get("/checkout");
+router.get("/checkout", mongoosedbShopController.getCheckout);
 
 router.post("/create-order", isAuth, mongoosedbShopController.createOrder);
 
@@ -84,5 +84,6 @@ router.post(
 	isAuth,
 	mongoosedbShopController.removePrdouctFromCart
 );
+
 
 module.exports = router;

@@ -15,7 +15,9 @@ const mongoosedbShopController = {
 		}
 	},
 	async getProducts(req, res, next) {
-		const products = await ProductModel.find({userId : req.user._id}).populate("product");
+		const products = await ProductModel.find({ userId: req.user._id }).populate(
+			"product"
+		);
 		products.map(p => (p.id = p._id));
 		try {
 			res.render("shop/shop-list", {
@@ -36,7 +38,6 @@ const mongoosedbShopController = {
 				title: product.title,
 				path: "product-detail",
 				product
-				
 			});
 		} catch (e) {
 			throw new Error("Failed:Shop.Product , Error :", e);
@@ -44,13 +45,12 @@ const mongoosedbShopController = {
 	},
 	async getCart(req, res, next) {
 		try {
-		
 			const { cart } = await req.user
 				.populate("cart.items.productId")
 				.execPopulate();
-		 //const cart = {items : []}
+			//const cart = {items : []}
 			// const cart = {items : []};
-		
+
 			res.render("shop/cart", {
 				title: "Product item added successfully!",
 				path: "cart",
@@ -65,9 +65,9 @@ const mongoosedbShopController = {
 
 		try {
 			const product = await ProductModel.findById(id);
-		  console.log("Product:",product)
+			console.log("Product:", product);
 			await req.user.addToCart(product);
-			 
+
 			res.render("shop/product-added-to-cart", {
 				title: "Product item added successfully!",
 				path: "cart"
@@ -97,14 +97,25 @@ const mongoosedbShopController = {
 			throw new Error("Failed:Orders , Error :", e);
 		}
 	},
-	getCheckout(req, res, next) {
+	async getCheckout(req, res, next) {
 		try {
+			const { cart } = await req.user
+				.populate("cart.items.productId")
+				.execPopulate();
+			const products = cart.items;
+
+			let totalPrice = 0;
+			products.forEach(p => (totalPrice += +p.productId.price * +p.quantity));
 			res.render("shop/checkout", {
 				title: "Checkout",
-				path: "cart"
+				path: "cart",
+				products,
+				totalPrice
 			});
 		} catch (e) {
-			throw new Error("Failed:Checkout , Error :", e);
+			const customError = new Error(e.message);
+			customError.httpStatusCode = 500;
+			next(customError);
 		}
 	},
 	async createInitialViewModel(req, res, next) {
