@@ -12,7 +12,7 @@ session({
 });
 const MongoDbSessionStore = require("connect-mongodb-session")(session);
 const { dbUrl } = require("./infrastructure/mongodb");
-const store = new MongoDbSessionStore({ uri: dbUrl, collection: "sessions" });
+const store = new MongoDbSessionStore({ uri: dbUrl, collection: "sessions" });//,expires: 2 * 60 * 60
 const app = express();
 const csurf = require("csurf");
 const multer = require("multer");
@@ -63,7 +63,7 @@ app.use(
 	flash()
 );
 
-app.use("/images",express.static(path.resolve(__dirname, "images")))
+app.use("/images", express.static(path.resolve(__dirname, "images")));
 
 //const { User } = require("./models/mongodb/user");
 // app.use(codeToRmove);
@@ -83,8 +83,6 @@ app.set("view engine", "ejs");
 //const { createMongoClient } = require("./infrastructure/mongodb");
 const mongoose = require("mongoose");
 const { UserModel } = require("./models/mongoose/user");
-
-
 
 app.use(async (req, res, next) => {
 	if (!req.session.user) return next();
@@ -116,9 +114,6 @@ app.use((req, res, next) => {
 	next();
 });
 
-
-
-
 const adminRoutes = require("./routers/admin");
 const shopRoutes = require("./routers/shop");
 const { get404 } = require("./controllers/not-found");
@@ -129,9 +124,8 @@ app.use("/admin", adminRoutes.router);
 app.use("/shop", shopRoutes);
 app.use("/auth", authRoutes);
 app.use("/500", get500);
-app.get("/" , (req,res,next)=> res.redirect("auth/signin"));
+app.get("/", (req, res, next) => res.redirect("auth/signin"));
 app.use(get404);
-
 
 app.use((error, req, res, next) => {
 	res.status(500).render("500", {
